@@ -52,10 +52,9 @@ app.get("/posts/:postName", (req, res) => {
   if (match >= 0) {
     const requestPost = posts[match];
     res.render("post", {title: requestPost.title, content: requestPost.content});
-  }
-    // else {
-    //   res.send("404: Not Found");
-    // }
+  } else {
+    res.send("404: Not Found");
+ }
 });
 
 
