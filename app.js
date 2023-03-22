@@ -45,15 +45,14 @@ app.post("/compose", (req, res) => {
 app.get("/posts/:postName", (req, res) => {
   const requestTitle = _.lowerCase(req.params.postName);
 
-  const match = posts.findIndex((post) => {
+  const match = posts.find((post) => {
     const storedTitle = _.lowerCase(post.title);
     return storedTitle == requestTitle;
   });
-  if (match >= 0) {
-    const requestPost = posts[match];
-    res.render("post", {title: requestPost.title, content: requestPost.content});
+  if (match) {
+    res.render("post", {title: match.title, content: match.content});
   } else {
-    res.send("404: Not Found");
+    res.send("404 Error: Page Not Found");
  }
 });
 
