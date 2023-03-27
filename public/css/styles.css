@@ -26,6 +26,25 @@ body{
     color: #55cbba !important;
 }
 
+.home-btn {
+    background-color: #46a597;
+    border-color: #46a597;
+}
+
+.home-btn:hover{
+    background-color: #55cbba;
+    border-color: #55cbba;
+    color: #2c2c2c;
+}
+
+/* 
+img {
+    transform: scale(0.75);
+    position: relative;
+    top: -3rem;
+    left:-3rem;
+} */
+
 .footer {
     position: absolute;
     text-align: center;

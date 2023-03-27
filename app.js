@@ -56,10 +56,9 @@ app.get("/posts/:postName", (req, res) => {
  }
 });
 
-
-
-
-
+app.get("/error", (req, res) => {
+  res.render("error");
+})
 
 
 
