@@ -52,14 +52,13 @@ app.get("/posts/:postName", (req, res) => {
   if (match) {
     res.render("post", {title: match.title, content: match.content});
   } else {
-    res.send("404 Error: Page Not Found");
+    res.status(404).render("error");
  }
 });
 
-app.get("/error", (req, res) => {
-  res.render("error");
-})
-
+app.use((req, res, next) => {
+  res.status(404).render("error");
+});
 
 
 
