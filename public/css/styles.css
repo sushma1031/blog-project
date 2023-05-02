@@ -37,13 +37,49 @@ body{
     color: #2c2c2c;
 }
 
-/* 
-img {
-    transform: scale(0.75);
-    position: relative;
-    top: -3rem;
-    left:-3rem;
-} */
+/* Modifications */
+
+.title-line h5 {
+    margin-bottom: 0;
+    padding-top: 0.25rem;
+    text-align: justify;
+}
+
+.featured-body {
+    padding: 0.5rem 0rem;
+    /* background-color: aliceblue; */
+}
+
+
+.featured-image {
+    height: 12rem;
+    width: 311.990px;
+    background-color: #f1f1f1;
+    overflow: hidden;
+    text-align: center;
+}
+
+.featured-image img {
+    width: 311.990px;
+    transform: scale(1);
+    opacity: 1;
+    transition-property: transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.featured-image img:hover {
+    opacity: 0.75;
+    transform: scale(1.2);
+}
+
+.featured-body p {
+    margin: 1rem 0;
+}
+
+.featured-body a {
+    color: #2c2c2c;
+}
 
 .footer {
     position: absolute;
