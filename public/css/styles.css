@@ -1,4 +1,4 @@
-body{
+body {
     position: relative;
     min-height: 100vh;
 }
@@ -8,7 +8,7 @@ body{
     padding-bottom: 70px;
 }
 
-.content-wrap{
+.content-wrap {
     padding-bottom: 75px;
 }
 
@@ -31,13 +31,12 @@ body{
     border-color: #46a597;
 }
 
-.home-btn:hover{
+.home-btn:hover {
     background-color: #55cbba;
     border-color: #55cbba;
     color: #2c2c2c;
 }
 
-/* Modifications */
 
 .title-line h5 {
     margin-bottom: 0;
@@ -47,9 +46,7 @@ body{
 
 .featured-body {
     padding: 0.5rem 0rem;
-    /* background-color: aliceblue; */
 }
-
 
 .featured-image {
     height: 12rem;
