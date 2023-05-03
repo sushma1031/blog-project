@@ -3,6 +3,28 @@ body {
     min-height: 100vh;
 }
 
+h1 {
+    text-align: center;
+    padding: 2rem 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.starting-content {
+    text-align: center;
+}
+
+h3 {
+    text-align: center;
+    padding: 3rem 0 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.underline {
+    display: inline-block;
+    border-bottom: 2px solid black;
+    padding-bottom: 1px;
+}
+
 .container-fluid {
     padding-top: 70px;
     padding-bottom: 70px;
@@ -42,6 +64,7 @@ body {
     margin-bottom: 0;
     padding-top: 0.25rem;
     text-align: justify;
+    font-weight: bold;
 }
 
 .featured-body {
@@ -74,8 +97,36 @@ body {
     margin: 1rem 0;
 }
 
-.featured-body a {
+.featured-title a {
     color: #2c2c2c;
+    text-decoration: none;
+    transition: color 175ms ease-in-out;
+}
+
+.featured-title a:hover {
+    color: #46A597;
+    text-decoration: none;
+}
+
+.post-image {
+    width: 1080px;
+    height:540px;
+    margin: auto;
+    background-color: #f1f1f1;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-image img {
+    width: 1080px;
+}
+
+.post-content{
+    width: 1080px;
+    margin: auto;
 }
 
 .footer {

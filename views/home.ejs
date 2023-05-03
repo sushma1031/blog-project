@@ -1,9 +1,10 @@
 <%- include("partials/header"); -%>
 
-<h1>Home</h1>
-<p><%= startingContent %></p>
+<h1>Welcome To My Blog!</h1>
+<p class="starting-content"><%= startingContent %></p>
+<h3><span class="underline">Featured Posts</span></h3>
 
-<div class="row pt-3 pb-5 px-5">
+<div class="row pt-5 pb-5 px-5">
   <% posts.forEach((post)=> { %>
     <div class="col-4 pb-3 pe-4">
     
@@ -11,10 +12,9 @@
         <div class="featured-image"><img src="/marguerite-729510__340.jpg" alt="sample thumbnail"></div>
         <div class="featured-body">
           <div class="title-line">
-            <h5 class="featured-title"><%= post.title %></h4>
+            <h5 class="featured-title"><a href="/posts/<%=post._id%>"><%= post.title %></a></h4>
           </div>
           <p><%= post.content.slice(0, 75) + " ..." %></p>
-          <a href="/posts/<%=post._id%>">Read More</a>
         </div>
       </div>
     
