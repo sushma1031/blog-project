@@ -4,7 +4,9 @@ A dynamic blog website initially built as part of The Complete 2020 Web Developm
 What I have added so far:
 - Connected the database to cloud using MongoDB Atlas
 - Formatted home and post pages to include image, date and username for posts
+- Made web app responsive
 - Deployed the web app to Render
+
 
 What I want to add:
 - User login and authentication
