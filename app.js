@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const date = require(__dirname + "/date.js");
 const PORT = process.env.PORT || 3000;
 
 const homeStartingContent =
@@ -26,6 +27,12 @@ mongoose.connect(
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,
+  username: String,
+  highlight: String,
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const Post = mongoose.model("Post", postSchema);
@@ -33,6 +40,9 @@ const Post = mongoose.model("Post", postSchema);
 app.get("/", (req, res) => {
   Post.find({})
     .then((posts) => {
+      posts.forEach(post => {
+        post.relativeDate = date.calcDate(post.createdAt)
+      })
       res.render("home", {
         startingContent: homeStartingContent,
         posts: posts,
@@ -57,6 +67,7 @@ app.post("/compose", (req, res) => {
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody,
+    username: req.body.username
   });
   post
     .save()
@@ -69,7 +80,8 @@ app.post("/compose", (req, res) => {
 app.get("/posts/:postID", (req, res) => {
   Post.findOne({ _id: req.params.postID })
     .then((post) => {
-      res.render("post", { title: post.title, content: post.content });
+      const today = date.getDate(post.createdAt);
+      res.render("post", { title: post.title, content: post.content, username: post.username, datePosted: today });
     })
     .catch(() => res.status(404).render("error"));
 });

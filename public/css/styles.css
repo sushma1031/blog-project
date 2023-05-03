@@ -65,6 +65,7 @@ h3 {
     padding-top: 0.25rem;
     text-align: justify;
     font-weight: bold;
+    font-family: 'Poppins', sans-serif;
 }
 
 .featured-body {
@@ -128,6 +129,15 @@ h3 {
     width: 1080px;
     margin: auto;
 }
+
+.created-date, .username{
+    padding:0 1rem 0 0.2rem;
+}
+
+.red-op{
+    opacity: 0.6;
+}
+
 
 .footer {
     position: absolute;
