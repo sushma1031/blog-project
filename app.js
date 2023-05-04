@@ -28,7 +28,7 @@ const postSchema = new mongoose.Schema({
   title: String,
   content: String,
   username: String,
-  highlight: String,
+  preview: String,
   createdAt: {
     type: Date,
     default: new Date(),
@@ -42,6 +42,9 @@ app.get("/", (req, res) => {
     .then((posts) => {
       posts.forEach(post => {
         post.relativeDate = date.calcDate(post.createdAt)
+        
+        if (post.preview)
+          post.content = post.preview + ". " + post.content.slice(0, 200);
       })
       res.render("home", {
         startingContent: homeStartingContent,
@@ -67,7 +70,8 @@ app.post("/compose", (req, res) => {
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody,
-    username: req.body.username
+    username: req.body.username,
+    preview: req.body.preview
   });
   post
     .save()
