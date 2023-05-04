@@ -69,17 +69,15 @@ h3 {
 }
 
 
-.title-line h5 {
+h5.title-line {
     margin-bottom: 0;
+    padding-bottom: 0.25rem;
     line-height: 1.9rem;
     padding-top: 0.25rem;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
 }
 
-.featured-body {
-    padding: 0.5rem 0rem;
-}
 
 .featured-image {
     height: 12rem;
@@ -103,17 +101,17 @@ h3 {
     transform: scale(1.2);
 }
 
-.featured-body p {
+.featured-body {
     padding: 0.25rem 0 0.5rem;
 }
 
-.featured-title a {
+.title-line a {
     color: #2c2c2c;
     text-decoration: none;
     transition: color 175ms ease-in-out;
 }
 
-.featured-title a:hover {
+.title-line a:hover {
     color: #46A597;
     text-decoration: none;
 }
