@@ -1,7 +1,7 @@
 <%- include("partials/header"); -%>
 
   <h1>Compose</h1>
-    <form action="/compose" method="post">
+    <form action="/compose" method="post" encType="multipart/form-data">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" name="username" id="username">
@@ -18,6 +18,10 @@
       <div class="mb-3">
         <label for="postTitle" class="form-label">Post</label>
         <textarea class="form-control" name="postBody" id="postBody" rows="5"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Choose an image</label>
+        <input class="form-control" type="file" name="image" id="image">
       </div>
       <button class="btn btn-secondary" type="submit" name="button">Publish</button>
     </form>

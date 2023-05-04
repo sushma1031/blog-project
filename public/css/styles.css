@@ -138,6 +138,10 @@ h3 {
     margin: auto;
 }
 
+.post-body{
+    padding: 0 5%;
+}
+
 .created-date,
 .username {
     padding: 0 1rem 0 0.2rem;
@@ -182,6 +186,10 @@ h3 {
         font-size: larger;
     }
 
+    .post-body {
+        padding: 0 0;
+    }
+
 }
 
 @media (min-width: 768px) and (max-width: 1028px) {
@@ -193,5 +201,9 @@ h3 {
     .featured-image img {
         width: inherit;
 
+    }
+
+    .post-body {
+        padding: 0 0;
     }
 }

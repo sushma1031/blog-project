@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const fileUpload = require("express-fileupload");
 const date = require(__dirname + "/date.js");
 const PORT = process.env.PORT || 3000;
 
@@ -17,6 +18,7 @@ const app = express();
 
 app.set("view engine", "ejs");
 
+app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
@@ -29,6 +31,7 @@ const postSchema = new mongoose.Schema({
   content: String,
   username: String,
   preview: String,
+  image: String,
   createdAt: {
     type: Date,
     default: new Date(),
@@ -67,25 +70,44 @@ app.get("/compose", (req, res) => {
 });
 
 app.post("/compose", (req, res) => {
-  const post = new Post({
-    title: req.body.postTitle,
-    content: req.body.postBody,
-    username: req.body.username,
-    preview: req.body.preview
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("No files were uploaded.");
+  }
+  const { image } = req.files;
+  const uploadPath = __dirname + "/public/postImages/" + image.name;
+
+  image.mv(uploadPath, (error) => {
+    if (error) {
+      return res.status(500).send(error.message);
+    }
+    
+    const post = new Post({
+      title: req.body.postTitle,
+      content: req.body.postBody,
+      username: req.body.username,
+      preview: req.body.preview,
+      image: `/postImages/${image.name}`
+    });
+    
+    post
+      .save()
+      .then(() => {
+        res.redirect("/");
+      })
+      .catch((err) => console.log(err));
   });
-  post
-    .save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((err) => console.log(err));
 });
+
+  
 
 app.get("/posts/:postID", (req, res) => {
   Post.findOne({ _id: req.params.postID })
     .then((post) => {
-      const today = date.getDate(post.createdAt);
-      res.render("post", { title: post.title, content: post.content, username: post.username, datePosted: today });
+      const day = date.getDate(post.createdAt);
+      res.render("post", {
+        title: post.title, content: post.content, username: post.username,
+        datePosted: day, postImage: post.image
+      });
     })
     .catch(() => res.status(404).render("error"));
 });
