@@ -41,6 +41,13 @@ app.use(
   })
 );
 
+app.use(function (req, res, next) {
+  res.locals = {
+    auth: req.session.userId,
+  };
+  next();
+});
+
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,

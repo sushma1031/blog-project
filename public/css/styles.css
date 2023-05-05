@@ -43,6 +43,10 @@ h3 {
     padding-bottom: 75px;
 }
 
+hr {
+  margin-top: 2rem;
+}
+
 .navbar {
     padding-top: 15px;
     padding-bottom: 15px;
