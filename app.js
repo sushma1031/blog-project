@@ -3,9 +3,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const fileUpload = require("express-fileupload");
 const date = require(__dirname + "/date.js");
 const PORT = process.env.PORT || 3000;
+
+const saltRounds = 10;
 
 const homeStartingContent =
   "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Cursis molestie a iaculis at erat pellentesque adipiscing.";
@@ -43,6 +46,14 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model("Post", postSchema);
 
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
+
+const User = mongoose.model("User", userSchema);
+
 app.get("/", (req, res) => {
   Post.find({})
     .then((posts) => {
@@ -66,11 +77,32 @@ app.get("/contact", (req, res) => {
   res.render("contact", { content: contactContent });
 });
 
-app.get("/compose", (req, res) => {
+app.get("/register", (req, res) => {
+  res.render("register");
+})
+
+app.post("/register", (req, res) => {
+  bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hash
+    });
+
+    newUser
+      .save()
+      .then(() => {
+        res.redirect("/");
+      })
+      .catch((err) => console.log(err));
+  });
+});
+
+app.get("/posts/new", (req, res) => {
   res.render("compose");
 });
 
-app.post("/compose", (req, res) => {
+app.post("/posts/new", (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files were uploaded.");
   }
@@ -100,7 +132,6 @@ app.post("/compose", (req, res) => {
       .catch((err) => console.log(err));
   });
 });
-
   
 
 app.get("/posts/:postID", (req, res) => {
