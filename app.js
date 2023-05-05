@@ -105,9 +105,16 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  // if (req.body.email !== process.env.EMAIL)
-  //   return res.send("You do not have permission to create an account.")
-
+  if (req.body.email !== process.env.EMAIL) {
+    const arguments = {
+      statusCode: "Sorry :(",
+      message: "You do not have permission to create an account. Please contact the owner of this blog.",
+      redirect: "/contact",
+      button: "Contact",
+    };
+    return res.render("error", arguments);
+  }
+    
   bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
     const newUser = new User({
       username: req.body.username,
@@ -117,7 +124,8 @@ app.post("/register", (req, res) => {
 
     newUser
       .save()
-      .then(() => {
+      .then((registeredUser) => {
+        req.session.userId = registeredUser._id;
         res.redirect("/");
       })
       .catch((err) => console.log(err));
@@ -235,7 +243,13 @@ app.get("/posts/:postID", (req, res) => {
       }  
     })
     .catch((error) => {
-      res.status(404).render("error");
+      const arguments = {
+        statusCode: "404",
+        message: "We couldn’t find that page you’re looking for.",
+        redirect: "/",
+        button: "Go Home"
+      }
+      res.status(404).render("error", arguments);
     });
 });
 
@@ -246,7 +260,13 @@ app.get("/logout", (req, res) => {
 })
 
 app.use((req, res, next) => {
-  res.status(404).render("error");
+  const arguments = {
+    statusCode: "404",
+    message: "We couldn’t find that page you’re looking for.",
+    redirect: "/",
+    button: "Go Home",
+  };
+  res.status(404).render("error", arguments);
 });
 
 app.listen(PORT, function () {

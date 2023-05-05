@@ -6,9 +6,5 @@ What I have added so far:
 - Formatted home and post pages to include image, date and username for posts
 - Made web app responsive
 - Deployed the web app to Render
-
-
-What I want to add:
-- User login and authentication
-- Image upload facility
-- Tags and post filtering
+- Image upload facility for each post
+- User registration, login and authentication
