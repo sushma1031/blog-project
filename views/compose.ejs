@@ -3,12 +3,12 @@
   <h1>Compose</h1>
     <form action="/compose" method="post" encType="multipart/form-data">
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" name="username" id="username">
+        <label for="username" class="form-label" >Username</label>
+        <input type="text" class="form-control" name="username" id="username" required>
       </div>
       <div class="mb-3">
         <label for="postTitle" class = "form-label">Title</label>
-        <input type="text" class="form-control" name="postTitle" id="postTitle">
+        <input type="text" class="form-control" name="postTitle" id="postTitle" required>
       </div>
       <div class="mb-3">
         <label for="preview" class="form-label">Preview</label>
@@ -17,12 +17,20 @@
       </div>
       <div class="mb-3">
         <label for="postTitle" class="form-label">Post</label>
-        <textarea class="form-control" name="postBody" id="postBody" rows="5"></textarea>
+        <textarea class="form-control" name="postBody" id="postBody" rows="5" required></textarea>
       </div>
-      <div class="mb-3">
-        <label for="image" class="form-label">Choose an image</label>
-        <input class="form-control" type="file" name="image" id="image">
+
+      <div class="row mb-3">
+        <div class="col">
+          <label for="image" class="form-label">Choose an image</label>
+          <input class="form-control" type="file" name="image" id="image" required>
+        </div>
+        <div class="col">
+          <label for="imageSource" class="form-label">Source</label>
+          <input type="text" class="form-control" name="imageSource" id="imageSource" placeholder="<a href=link> Artist </a> on <a href=link> Website </a>" required>
+        </div>
       </div>
+
       <button class="btn btn-secondary" type="submit" name="button">Publish</button>
     </form>
 

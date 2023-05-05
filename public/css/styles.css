@@ -149,6 +149,12 @@ h5.title-line {
     opacity: 0.6;
 }
 
+.credit{
+    text-align: center;
+    font-style: italic;
+    padding: 0.2rem 0 0.5rem;
+    margin: 0;
+}
 
 .footer {
     position: absolute;
@@ -188,20 +194,4 @@ h5.title-line {
         padding: 0 0;
     }
 
-}
-
-@media (min-width: 768px) and (max-width: 1028px) {
-    .featured-image {
-        width: 100%;
-        height: 18rem;
-    }
-
-    .featured-image img {
-        width: inherit;
-
-    }
-
-    .post-body {
-        padding: 0 0;
-    }
 }

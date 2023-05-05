@@ -4,17 +4,17 @@
 <p class="starting-content res-text"><%= startingContent %></p>
 <h3><span class="underline">Featured Posts</span></h3>
 
-<div class="row pt-5 pb-5 px-5">
+<div class="row pt-5 pb-5 px-3 px-lg-5">
   <% posts.forEach((post)=> { %>
-    <div class="col-lg-4 pb-3 pe-4">
+    <div class="col-6 col-lg-4 pb-3 px-3">
     
       <div class="featured-post">
-        <div class="featured-image"><img src="<%= post.image %>" alt="sample thumbnail"></div>
+        <div class="featured-image"><img src="<%= post.image.path %>" alt="sample thumbnail"></div>
         <div class="featured-body">
 
             <h5 class="title-line"><a href="/posts/<%=post._id%>"><%= post.title %></a></h4>
 
-          <p><%= post.content.slice(0, 200) + " ..." %></p>
+          <p><%= post.preview.slice(0, 200) + " ..." %></p>
           <p class="red-op">
             <%= post.username %> · <%= post.relativeDate %>
           </p>
