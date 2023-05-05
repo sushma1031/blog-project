@@ -100,7 +100,8 @@ app.get("/register", (req, res) => {
   if (req.session.userId) {
     return res.redirect("/");
   }
-  return res.render("register");
+  else
+    return res.render("register");
 })
 
 app.post("/register", (req, res) => {
@@ -124,10 +125,24 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  let message;
+  switch (req.query.error) {
+    case "invalidemail":
+      message = "This email is not registered.";
+      break;
+    case "incorrectpassword":
+      message = "Incorrect password.";
+      break;
+    default:
+      message = undefined;
+
+  }
+
   if (req.session.userId) {
     return res.redirect("/");
   }
-  return res.render("login");
+  else
+    return res.render("login", {errorMessage: message});
 });
 
 app.post("/login", (req, res) => {
@@ -135,14 +150,19 @@ app.post("/login", (req, res) => {
 
   User.findOne({ email: email })
     .then((foundUser) => {
-      bcrypt.compare(password, foundUser.password, function (err, result) {
-        if (result) {
-          req.session.userId = foundUser._id;
-          res.redirect("/");
-        }
-        else
-          res.redirect("/login");
-      });
+      if (foundUser) {
+        bcrypt.compare(password, foundUser.password, function (err, result) {
+          if (result) {
+            req.session.userId = foundUser._id;
+            res.redirect("/");
+          }
+          else
+            res.redirect("/login?error=incorrectpassword");
+        });
+      }
+      else
+        res.redirect("/login?error=invalidemail");
+      
     })
     .catch((error) => console.log(error));
   
@@ -202,16 +222,28 @@ app.post("/compose", (req, res) => {
 app.get("/posts/:postID", (req, res) => {
   Post.findOne({ _id: req.params.postID })
     .then((post) => {
-      const day = date.getDate(post.createdAt)
-      res.render("post", {
-        title: post.title, content: post.content, username: post.username,
-        datePosted: day, postImage: post.image.path, imageSource: post.image.source
-      });
+      if (post) {
+        const day = date.getDate(post.createdAt);
+        res.render("post", {
+          title: post.title,
+          content: post.content,
+          username: post.username,
+          datePosted: day,
+          postImage: post.image.path,
+          imageSource: post.image.source,
+        });
+      }  
     })
     .catch((error) => {
-      console.log(error);
+      res.status(404).render("error");
     });
 });
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+})
 
 app.use((req, res, next) => {
   res.status(404).render("error");
