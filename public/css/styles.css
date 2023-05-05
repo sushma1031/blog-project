@@ -57,6 +57,10 @@ hr {
     letter-spacing: 5px;
 }
 
+p.navbar-brand{
+    margin: 0;
+}
+
 .navbar-nav li a:hover {
     color: #55cbba !important;
 }
