@@ -98,6 +98,26 @@ app.post("/register", (req, res) => {
   });
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email: email })
+    .then((foundUser) => {
+      bcrypt.compare(password, foundUser.password, function (err, result) {
+        if (result)
+          res.redirect("/");
+        else
+          res.redirect("/login");
+      });
+    })
+    .catch((err) => console.log(err));
+  
+})
+
 app.get("/posts/new", (req, res) => {
   res.render("compose");
 });
