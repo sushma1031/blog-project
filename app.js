@@ -5,6 +5,8 @@ const ejs = require("ejs");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const fileUpload = require("express-fileupload");
+const expressSession = require("express-session");
+const connectMongo = require("connect-mongo");
 const date = require(__dirname + "/date.js");
 const PORT = process.env.PORT || 3000;
 
@@ -20,13 +22,23 @@ const contactContent =
 const app = express();
 
 app.set("view engine", "ejs");
-
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect(
-  "mongodb+srv://admin-sushma:" + process.env.PASSWORD + "@cluster0.1quaohb.mongodb.net/postsDB"
+const mongoDBURL = "mongodb+srv://admin-sushma:" + process.env.PASSWORD + "@cluster0.1quaohb.mongodb.net/postsDB"
+
+mongoose.connect(mongoDBURL);
+
+app.use(
+  expressSession({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: connectMongo.create({
+      mongoUrl: mongoDBURL
+    })
+  })
 );
 
 const postSchema = new mongoose.Schema({
@@ -47,9 +59,9 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+  username: { type: String},
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: String 
 });
 
 const User = mongoose.model("User", userSchema);
@@ -78,10 +90,16 @@ app.get("/contact", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+  if (req.session.userId) {
+    return res.redirect("/");
+  }
+  return res.render("register");
 })
 
 app.post("/register", (req, res) => {
+  // if (req.body.email !== process.env.EMAIL)
+  //   return res.send("You do not have permission to create an account.")
+
   bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
     const newUser = new User({
       username: req.body.username,
@@ -99,7 +117,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  if (req.session.userId) {
+    return res.redirect("/");
+  }
+  return res.render("login");
 });
 
 app.post("/login", (req, res) => {
@@ -108,21 +129,38 @@ app.post("/login", (req, res) => {
   User.findOne({ email: email })
     .then((foundUser) => {
       bcrypt.compare(password, foundUser.password, function (err, result) {
-        if (result)
+        if (result) {
+          req.session.userId = foundUser._id;
           res.redirect("/");
+        }
         else
           res.redirect("/login");
       });
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.log(error));
   
 })
 
-app.get("/posts/new", (req, res) => {
-  res.render("compose");
+app.get("/compose", (req, res) => {
+  User.findById(req.session.userId)
+    .then((user) => {
+    if (!user) {
+      return res.redirect("/");
+      }
+    })
+    .catch(error => {
+      console.log(error.message)
+      return res.redirect("/")
+    });
+
+  if (req.session.userId) {
+    return res.render("compose");
+  }
+  else
+    return res.redirect("/login");
 });
 
-app.post("/posts/new", (req, res) => {
+app.post("/compose", (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files were uploaded.");
   }
@@ -158,9 +196,6 @@ app.get("/posts/:postID", (req, res) => {
   Post.findOne({ _id: req.params.postID })
     .then((post) => {
       const day = date.getDate(post.createdAt)
-      // const decodedSrc = codec.decodeHTML(post.image.source);
-      // console.log("post.image.source: " + post.image.source);
-      // console.log("decodedSrc: " + decodedSrc);
       res.render("post", {
         title: post.title, content: post.content, username: post.username,
         datePosted: day, postImage: post.image.path, imageSource: post.image.source
