@@ -31,10 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //Cloud Database Connection
-const mongoDBURL =
-  "mongodb+srv://admin-sushma:" +
-  process.env.PASSWORD +
-  "@cluster0.1quaohb.mongodb.net/postsDB";
+const mongoDBURL = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
 
 mongoose.connect(mongoDBURL);
 
