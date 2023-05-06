@@ -1,21 +1,40 @@
 <%- include("partials/header"); -%>
 
-<h3><span class="underline">All Posts</span></h3>
+  <h3><span class="underline">All Posts</span></h3>
 
-<div class="row pt-5 pb-5 px-3 px-lg-5">
-  <% posts.forEach((post)=> { %>
-  <div class="col-lg-4 ps-4 pe-0">
-    
-          <h5 class="title-line"><a href="/posts/<%=post._id%>"><%= post.title %></a></h4>
-          <p>
-            <em><span class="red-op">Posted by </span><%= post.username %><span class="red-op"> on <%= post.dateString %></span></em>
-          </p>
-    
-    
+  <div class="row pt-5 pb-5 px-3 px-lg-5">
+    <% posts.forEach((post)=> { %>
+      <div class="col-lg-4 px-3">
+
+        <div class="flex post-options">
+          
+          <h5 class="title-line"><a href="/posts/<%=post._id%>">
+              <%= post.title %>
+            </a>
+          </h5>
+
+          <% if(auth) { %>
+          <div class="dropdown">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/posts/<%=post._id%>" class="link">View Post</a></li>
+              <li><a class="dropdown-item" href="/delete/<%=post._id%>" class="link">Delete Post</a></li>
+            </ul>
+          </div>
+
+          <% } %>
+        </div>
+        <p>
+          <em><span class="red-op">Posted by </span>
+            <%= post.username %><span class="red-op"> on <%= post.dateString %></span>
+          </em>
+        </p>
+
+
+      </div>
+      <% }) %>
+
   </div>
-  <% }) %>
-
-</div>
 
 
-<%- include("partials/footer"); -%>
+  <%- include("partials/footer"); -%>
