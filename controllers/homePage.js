@@ -6,6 +6,8 @@ const homeStartingContent =
 
 module.exports = (req, res) => {
   Post.find({})
+    .sort({ createdAt: -1 })
+    .limit(3)
     .then((posts) => {
       posts.forEach((post) => {
         post.relativeDate = date.calcDate(post.createdAt);
