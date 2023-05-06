@@ -1,11 +1,15 @@
 const Post = require("../database/Post.js");
+const cloudinary = require("cloudinary").v2;
 
-module.exports = (req, res) => {
-  Post.findByIdAndDelete({ _id: req.params.postID })
-    .then(() => {
-      res.redirect("/posts");
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
+module.exports = async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.postID);
+
+    await cloudinary.uploader.destroy(post.image.id);
+
+    await post.deleteOne();
+    res.redirect("/posts");
+  } catch (err) {
+    console.log(err.message);
+  }
 };
