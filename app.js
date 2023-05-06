@@ -19,6 +19,9 @@ const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
 const redirectIfAuthenticated = require("./controllers/middlewareRedirect.js");
 
+const Post = require("./database/Post.js");
+const date = require("./date.js");
+
 const aboutContent =
   "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
 const contactContent =
@@ -82,6 +85,18 @@ app.get("/about", (req, res) => {
 app.get("/contact", (req, res) => {
   res.render("contact", { content: contactContent });
 });
+
+app.get("/posts", (req, res) => {
+  Post.find({})
+    .then((posts) => {
+      posts.forEach((post) => {
+        post.dateString = date.getDate(post.createdAt);
+      });
+      res.render("posts", {posts});
+    })
+    .catch((err) => console.log(err));
+  
+})
 
 app.get("/register", redirectIfAuthenticated, (req, res) => {
   res.render("register");
