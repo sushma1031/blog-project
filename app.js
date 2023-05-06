@@ -18,7 +18,8 @@ const getPostController = require("./controllers/getPost.js");
 const storeUserController = require("./controllers/storeUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
-const redirectIfAuthenticated = require("./controllers/middlewareRedirect.js");
+const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
+const auth = require("./controllers/middleware.js").auth;
 const deletePostController = require("./controllers/deletePost.js");
 
 const Post = require("./database/Post.js");
@@ -100,13 +101,13 @@ app.get("/login", redirectIfAuthenticated, loginController);
 
 app.post("/login", redirectIfAuthenticated, loginUserController);
 
-app.get("/compose", createPostController);
+app.get("/compose", auth, createPostController);
 
 app.post("/compose", parser.single("image"), storePostController);
 
 app.get("/posts/:postID", getPostController);
 
-app.get("/delete/:postID", deletePostController);
+app.get("/delete/:postID", auth, deletePostController);
 
 app.get("/logout", (req, res) => {
   if (req.session.userId) {
