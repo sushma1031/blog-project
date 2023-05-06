@@ -7,8 +7,10 @@ const bcrypt = require("bcrypt");
 const fileUpload = require("express-fileupload");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
-const date = require(__dirname + "/date.js");
 const PORT = process.env.PORT || 3000;
+
+const date = require(__dirname + "/date.js");
+const Post = require("./database/Post.js");
 
 const saltRounds = 10;
 
@@ -26,7 +28,10 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const mongoDBURL = "mongodb+srv://admin-sushma:" + process.env.PASSWORD + "@cluster0.1quaohb.mongodb.net/postsDB"
+const mongoDBURL =
+  "mongodb+srv://admin-sushma:" +
+  process.env.PASSWORD +
+  "@cluster0.1quaohb.mongodb.net/postsDB";
 
 mongoose.connect(mongoDBURL);
 
@@ -36,8 +41,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: connectMongo.create({
-      mongoUrl: mongoDBURL
-    })
+      mongoUrl: mongoDBURL,
+    }),
   })
 );
 
@@ -48,27 +53,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-const postSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  username: String,
-  preview: {type: String, default: ""},
-  image: {
-    path: String,
-    source: String
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-});
-
-const Post = mongoose.model("Post", postSchema);
-
 const userSchema = new mongoose.Schema({
-  username: { type: String},
+  username: { type: String },
   email: { type: String, required: true, unique: true },
-  password: String 
+  password: String,
 });
 
 const User = mongoose.model("User", userSchema);
@@ -76,10 +64,10 @@ const User = mongoose.model("User", userSchema);
 app.get("/", (req, res) => {
   Post.find({})
     .then((posts) => {
-      posts.forEach(post => {
-        post.relativeDate = date.calcDate(post.createdAt)
+      posts.forEach((post) => {
+        post.relativeDate = date.calcDate(post.createdAt);
         post.preview = post.preview.concat(post.content);
-      })
+      });
       res.render("home", {
         startingContent: homeStartingContent,
         posts: posts,
@@ -99,27 +87,26 @@ app.get("/contact", (req, res) => {
 app.get("/register", (req, res) => {
   if (req.session.userId) {
     return res.redirect("/");
-  }
-  else
-    return res.render("register");
-})
+  } else return res.render("register");
+});
 
 app.post("/register", (req, res) => {
   if (req.body.email !== process.env.EMAIL) {
     const arguments = {
       statusCode: "Sorry :(",
-      message: "You do not have permission to create an account. Please contact the owner of this blog.",
+      message:
+        "You do not have permission to create an account. Please contact the owner of this blog.",
       redirect: "/contact",
       button: "Contact",
     };
     return res.render("error", arguments);
   }
-    
+
   bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
-      password: hash
+      password: hash,
     });
 
     newUser
@@ -143,14 +130,11 @@ app.get("/login", (req, res) => {
       break;
     default:
       message = undefined;
-
   }
 
   if (req.session.userId) {
     return res.redirect("/");
-  }
-  else
-    return res.render("login", {errorMessage: message});
+  } else return res.render("login", { errorMessage: message });
 });
 
 app.post("/login", (req, res) => {
@@ -163,38 +147,26 @@ app.post("/login", (req, res) => {
           if (result) {
             req.session.userId = foundUser._id;
             res.redirect("/");
-          }
-          else
-            res.redirect("/login?error=incorrectpassword");
+          } else res.redirect("/login?error=incorrectpassword");
         });
-      }
-      else
-        res.redirect("/login?error=invalidemail");
-      
+      } else res.redirect("/login?error=invalidemail");
     })
     .catch((error) => console.log(error));
-  
-})
+});
 
 app.get("/compose", (req, res) => {
-
   if (req.session.userId) {
     User.findById(req.session.userId)
       .then((user) => {
         if (!user) {
           return res.redirect("/login");
-        } 
-        else
-          return res.render("compose");
+        } else return res.render("compose");
       })
       .catch((error) => {
         console.log(error.message);
         return res.redirect("/");
       });
-    
-  }
-  else
-    return res.redirect("/login");
+  } else return res.redirect("/login");
 });
 
 app.post("/compose", (req, res) => {
@@ -208,26 +180,19 @@ app.post("/compose", (req, res) => {
     if (error) {
       return res.status(500).send(error.message);
     }
-    const post = new Post({
-      title: req.body.postTitle,
-      content: req.body.postBody,
-      username: req.body.username,
-      preview: req.body.preview,
+    Post.create({
+      ...req.body,
       image: {
         path: `/postImages/${image.name}`,
-        source: req.body.imageSource
-      }
-    });
-    
-    post
-      .save()
+        source: req.body.imageSource,
+      },
+    })
       .then(() => {
         res.redirect("/");
       })
       .catch((err) => console.log(err));
   });
 });
-  
 
 app.get("/posts/:postID", (req, res) => {
   Post.findOne({ _id: req.params.postID })
@@ -242,15 +207,15 @@ app.get("/posts/:postID", (req, res) => {
           postImage: post.image.path,
           imageSource: post.image.source,
         });
-      }  
+      }
     })
     .catch((error) => {
       const arguments = {
         statusCode: "404",
         message: "We couldn’t find that page you’re looking for.",
         redirect: "/",
-        button: "Go Home"
-      }
+        button: "Go Home",
+      };
       res.status(404).render("error", arguments);
     });
 });
@@ -259,7 +224,7 @@ app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
   });
-})
+});
 
 app.use((req, res, next) => {
   const arguments = {
