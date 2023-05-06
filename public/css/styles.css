@@ -57,6 +57,10 @@ hr {
     letter-spacing: 5px;
 }
 
+.nav-link {
+    letter-spacing: 3px;
+}
+
 p.navbar-brand{
     margin: 0;
 }
@@ -96,7 +100,7 @@ h5.title-line {
 }
 
 .featured-image img {
-    max-width: 100%;
+    height: inherit;
     transform: scale(1);
     opacity: 1;
     transition-property: transform, opacity;

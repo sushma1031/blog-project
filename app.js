@@ -58,7 +58,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "tia-blog-images",
     allowedFormats: ["jpg", "png"],
-    transformation: [{ width: 1280, height: 720, crop: "lfill" }],
+    transformation: [{ width: 1280, height: 720, crop: "fill" }],
   },
 });
 const parser = multer({ storage: storage });
@@ -190,7 +190,6 @@ app.post("/compose", parser.single("image"), (req, res) => {
   if (!req.file || Object.keys(req.file).length === 0) {
      return res.status(400).send("No files were uploaded.");
   }
-  res.redirect("/");
   const image = {
     url: req.file.path,
     id: req.file.filename,
@@ -202,7 +201,7 @@ app.post("/compose", parser.single("image"), (req, res) => {
     image,
   })
     .then(() => {
-      return res.redirect("/");
+      res.redirect("/");
     })
     .catch((err) => console.log(err));
 });
@@ -217,7 +216,7 @@ app.get("/posts/:postID", (req, res) => {
           content: post.content,
           username: post.username,
           datePosted: day,
-          postImage: post.image.path,
+          image: post.image.url,
           imageSource: post.image.source,
         });
       }
