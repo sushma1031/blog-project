@@ -177,19 +177,21 @@ app.post("/login", (req, res) => {
 })
 
 app.get("/compose", (req, res) => {
-  User.findById(req.session.userId)
-    .then((user) => {
-    if (!user) {
-      return res.redirect("/");
-      }
-    })
-    .catch(error => {
-      console.log(error.message)
-      return res.redirect("/")
-    });
 
   if (req.session.userId) {
-    return res.render("compose");
+    User.findById(req.session.userId)
+      .then((user) => {
+        if (!user) {
+          return res.redirect("/login");
+        } 
+        else
+          return res.render("compose");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        return res.redirect("/");
+      });
+    
   }
   else
     return res.redirect("/login");
