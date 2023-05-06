@@ -4,7 +4,9 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const fileUpload = require("express-fileupload");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
 const PORT = process.env.PORT || 3000;
@@ -24,7 +26,6 @@ const contactContent =
 const app = express();
 
 app.set("view engine", "ejs");
-app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
@@ -45,6 +46,22 @@ app.use(
     }),
   })
 );
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "tia-blog-images",
+    allowedFormats: ["jpg", "png"],
+    transformation: [{ width: 1280, height: 720, crop: "lfill" }],
+  },
+});
+const parser = multer({ storage: storage });
 
 app.use(function (req, res, next) {
   res.locals = {
@@ -169,29 +186,25 @@ app.get("/compose", (req, res) => {
   } else return res.redirect("/login");
 });
 
-app.post("/compose", (req, res) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send("No files were uploaded.");
+app.post("/compose", parser.single("image"), (req, res) => {
+  if (!req.file || Object.keys(req.file).length === 0) {
+     return res.status(400).send("No files were uploaded.");
   }
-  const image = req.files.image;
-  const uploadPath = __dirname + "/public/postImages/" + image.name;
+  res.redirect("/");
+  const image = {
+    url: req.file.path,
+    id: req.file.filename,
+    source: req.body.imageSource
+  }
 
-  image.mv(uploadPath, (error) => {
-    if (error) {
-      return res.status(500).send(error.message);
-    }
-    Post.create({
-      ...req.body,
-      image: {
-        path: `/postImages/${image.name}`,
-        source: req.body.imageSource,
-      },
+  Post.create({
+    ...req.body,
+    image,
+  })
+    .then(() => {
+      return res.redirect("/");
     })
-      .then(() => {
-        res.redirect("/");
-      })
-      .catch((err) => console.log(err));
-  });
+    .catch((err) => console.log(err));
 });
 
 app.get("/posts/:postID", (req, res) => {
