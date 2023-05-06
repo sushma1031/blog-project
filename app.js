@@ -12,15 +12,17 @@ const PORT = process.env.PORT || 3000;
 
 const createPostController = require("./controllers/createPost.js");
 const homePageController = require("./controllers/homePage.js");
+const getAllPostsController = require("./controllers/getAllPosts.js");
 const storePostController = require("./controllers/storePost.js");
 const getPostController = require("./controllers/getPost.js");
 const storeUserController = require("./controllers/storeUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
 const redirectIfAuthenticated = require("./controllers/middlewareRedirect.js");
+const deletePostController = require("./controllers/deletePost.js");
 
 const Post = require("./database/Post.js");
-const date = require("./date.js");
+
 
 const aboutContent =
   "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
@@ -86,17 +88,7 @@ app.get("/contact", (req, res) => {
   res.render("contact", { content: contactContent });
 });
 
-app.get("/posts", (req, res) => {
-  Post.find({})
-    .then((posts) => {
-      posts.forEach((post) => {
-        post.dateString = date.getDate(post.createdAt);
-      });
-      res.render("posts", {posts});
-    })
-    .catch((err) => console.log(err));
-  
-})
+app.get("/posts", getAllPostsController);
 
 app.get("/register", redirectIfAuthenticated, (req, res) => {
   res.render("register");
@@ -113,6 +105,8 @@ app.get("/compose", createPostController);
 app.post("/compose", parser.single("image"), storePostController);
 
 app.get("/posts/:postID", getPostController);
+
+app.get("/delete/:postID", deletePostController);
 
 app.get("/logout", (req, res) => {
   if (req.session.userId) {
