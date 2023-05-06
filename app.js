@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -15,9 +14,10 @@ const createPostController = require("./controllers/createPost.js");
 const homePageController = require("./controllers/homePage.js");
 const storePostController = require("./controllers/storePost.js");
 const getPostController = require("./controllers/getPost.js");
-const storeUserController = require("./controllers/storeUser");
-
-const saltRounds = 10;
+const createUserController = require("./controllers/createUser.js");
+const storeUserController = require("./controllers/storeUser.js");
+const loginController = require("./controllers/login.js");
+const loginUserController = require("./controllers/loginUser.js");
 
 
 const aboutContent =
@@ -84,48 +84,13 @@ app.get("/contact", (req, res) => {
   res.render("contact", { content: contactContent });
 });
 
-app.get("/register", (req, res) => {
-  if (req.session.userId) {
-    return res.redirect("/");
-  } else return res.render("register");
-});
+app.get("/register", createUserController);
 
 app.post("/register", storeUserController);
 
-app.get("/login", (req, res) => {
-  let message;
-  switch (req.query.error) {
-    case "invalidemail":
-      message = "This email is not registered.";
-      break;
-    case "incorrectpassword":
-      message = "Incorrect password.";
-      break;
-    default:
-      message = undefined;
-  }
+app.get("/login", loginController);
 
-  if (req.session.userId) {
-    return res.redirect("/");
-  } else return res.render("login", { errorMessage: message });
-});
-
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-
-  User.findOne({ email: email })
-    .then((foundUser) => {
-      if (foundUser) {
-        bcrypt.compare(password, foundUser.password, function (err, result) {
-          if (result) {
-            req.session.userId = foundUser._id;
-            res.redirect("/");
-          } else res.redirect("/login?error=incorrectpassword");
-        });
-      } else res.redirect("/login?error=invalidemail");
-    })
-    .catch((error) => console.log(error));
-});
+app.post("/login", loginUserController);
 
 app.get("/compose", createPostController);
 
