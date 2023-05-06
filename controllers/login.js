@@ -10,8 +10,5 @@ module.exports = (req, res) => {
     default:
       message = undefined;
   }
-
-  if (req.session.userId) {
-    return res.redirect("/");
-  } else return res.render("login", { errorMessage: message });
+  res.render("login", { errorMessage: message });
 };

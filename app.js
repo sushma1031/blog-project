@@ -14,11 +14,10 @@ const createPostController = require("./controllers/createPost.js");
 const homePageController = require("./controllers/homePage.js");
 const storePostController = require("./controllers/storePost.js");
 const getPostController = require("./controllers/getPost.js");
-const createUserController = require("./controllers/createUser.js");
 const storeUserController = require("./controllers/storeUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
-
+const redirectIfAuthenticated = require("./controllers/middlewareRedirect.js");
 
 const aboutContent =
   "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
@@ -31,6 +30,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+//Cloud Database Connection
 const mongoDBURL =
   "mongodb+srv://admin-sushma:" +
   process.env.PASSWORD +
@@ -38,6 +38,7 @@ const mongoDBURL =
 
 mongoose.connect(mongoDBURL);
 
+//Enabling Sessions
 app.use(
   expressSession({
     secret: process.env.SECRET,
@@ -49,6 +50,7 @@ app.use(
   })
 );
 
+//Cloud Image Storage
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -72,7 +74,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-
+//Routes
 
 app.get("/", homePageController);
 
@@ -84,13 +86,15 @@ app.get("/contact", (req, res) => {
   res.render("contact", { content: contactContent });
 });
 
-app.get("/register", createUserController);
+app.get("/register", redirectIfAuthenticated, (req, res) => {
+  res.render("register");
+});
 
-app.post("/register", storeUserController);
+app.post("/register", redirectIfAuthenticated, storeUserController);
 
-app.get("/login", loginController);
+app.get("/login", redirectIfAuthenticated, loginController);
 
-app.post("/login", loginUserController);
+app.post("/login", redirectIfAuthenticated, loginUserController);
 
 app.get("/compose", createPostController);
 
@@ -99,9 +103,13 @@ app.post("/compose", parser.single("image"), storePostController);
 app.get("/posts/:postID", getPostController);
 
 app.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
+  if (req.session.userId) {
+    req.session.destroy(() => {
+      res.redirect("/");
+    });
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.use((req, res, next) => {
