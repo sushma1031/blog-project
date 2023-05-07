@@ -133,7 +133,6 @@ h5.title-line {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
 }
 
 .dropdown a.dropdown-toggle {
@@ -191,7 +190,6 @@ h5.title-line {
 }
 
 .footer p {
-    /* padding-top: 0.25rem; */
     font-size: 0.8rem;
     color: #f1f1f1;
 }
