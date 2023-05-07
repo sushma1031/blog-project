@@ -4,8 +4,9 @@ const cloudinary = require("cloudinary").v2;
 module.exports = async (req, res) => {
   try {
     let post = await Post.findById(req.params.postID);
-
-    await cloudinary.uploader.destroy(post.image.id);
+    if (post.image.id) {
+      await cloudinary.uploader.destroy(post.image.id);
+    }
 
     await post.deleteOne();
     res.redirect("/posts");
