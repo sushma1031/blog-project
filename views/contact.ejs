@@ -1,6 +1,30 @@
 <%- include("partials/header"); -%>
 
   <h1>Contact Me</h1>
-  <p class="starting-content res-text"><%= content %></p>
+  <p class="starting-content res-text">
+    If any of my words resonated with you, or if you have any suggestions, or you just want to say hi!
+  </p>
+  <form action="mailto:sushmajram@gmail.com" method="post" enctype="text/plain">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <small id="contentHelp" class="form-text text-muted">(required)</small>
+      <input type="text" class="form-control" name="name" id="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <small id="contentHelp" class="form-text text-muted">(required)</small>
+      <input type="email" class="form-control" name="email" id="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="website" class="form-label">Website</label>
+      <input type="text" class="form-control" name="website" id="website">
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Your Message</label>
+      <small id="contentHelp" class="form-text text-muted">(required)</small>
+      <textarea class="form-control" name="message" id="message" rows="5" required></textarea>
+    </div>
+    <input class="btn btn-secondary" type="submit" name="button">
+  </form>
 
-<%- include("partials/footer"); -%>
+  <%- include("partials/footer"); -%>
