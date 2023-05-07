@@ -11,7 +11,6 @@ module.exports = (req, res) => {
     .then((posts) => {
       posts.forEach((post) => {
         post.relativeDate = date.calcDate(post.createdAt);
-        post.preview = post.preview.concat(post.content);
       });
       res.render("home", {
         startingContent: homeStartingContent,
