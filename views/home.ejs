@@ -14,7 +14,7 @@
 
             <h5 class="title-line"><a href="/posts/<%=post._id%>"><%= post.title %></a></h4>
 
-          <p><%= post.preview.slice(0, 200) + " ..." %></p>
+          <%- post.content.slice(0, 200) + " ..." %>
           <p class="red-op">
             <%= post.username %> · <%= post.relativeDate %>
           </p>

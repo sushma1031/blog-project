@@ -15,10 +15,10 @@
     <div class="post-image">
       <img src="<%= image %>" alt="sample image">
     </div>
-    <p class="credit">Image by <%- imageSource %></p>
-    <p class="post-content py-4 res-text">
-      <%= content %>
-    </p>
+    <p class="credit">Source: <%- imageSource %></p>
+    <div class="post-content py-4 res-text">
+      <%- content %>
+    </div>
   </div>
 
 <%- include("partials/footer"); -%>
