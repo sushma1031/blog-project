@@ -133,6 +133,7 @@ h5.title-line {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: baseline;
 }
 
 .dropdown a.dropdown-toggle {
