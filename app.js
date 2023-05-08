@@ -10,18 +10,6 @@ const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
 const PORT = process.env.PORT || 3000;
 
-const createPostController = require("./controllers/createPost.js");
-const homePageController = require("./controllers/homePage.js");
-const getAllPostsController = require("./controllers/getAllPosts.js");
-const storePostController = require("./controllers/storePost.js");
-const getPostController = require("./controllers/getPost.js");
-const storeUserController = require("./controllers/storeUser.js");
-const loginController = require("./controllers/login.js");
-const loginUserController = require("./controllers/loginUser.js");
-const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
-const auth = require("./controllers/middleware.js").auth;
-const deletePostController = require("./controllers/deletePost.js");
-
 const app = express();
 
 app.set("view engine", "ejs");
@@ -31,7 +19,9 @@ app.use(express.static("public"));
 //Cloud Database Connection
 const mongoDBURL = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
 
-mongoose.connect(mongoDBURL);
+mongoose.connect(mongoDBURL)
+  .then(() => console.log("Connected to Mongo."))
+  .catch(err => console.log(err.message));
 
 //Enabling Sessions
 app.use(
@@ -61,6 +51,18 @@ const storage = new CloudinaryStorage({
   },
 });
 const parser = multer({ storage: storage });
+
+const createPostController = require("./controllers/createPost.js");
+const homePageController = require("./controllers/homePage.js");
+const getAllPostsController = require("./controllers/getAllPosts.js");
+const storePostController = require("./controllers/storePost.js");
+const getPostController = require("./controllers/getPost.js");
+const storeUserController = require("./controllers/storeUser.js");
+const loginController = require("./controllers/login.js");
+const loginUserController = require("./controllers/loginUser.js");
+const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
+const auth = require("./controllers/middleware.js").auth;
+const deletePostController = require("./controllers/deletePost.js");
 
 app.use(function (req, res, next) {
   res.locals = {
