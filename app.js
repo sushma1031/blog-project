@@ -58,6 +58,7 @@ const getAllPostsController = require("./controllers/getAllPosts.js");
 const storePostController = require("./controllers/storePost.js");
 const getPostController = require("./controllers/getPost.js");
 const storeUserController = require("./controllers/storeUser.js");
+const getUserController = require("./controllers/getUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
 const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
@@ -85,9 +86,7 @@ app.get("/contact", (req, res) => {
 
 app.get("/posts", getAllPostsController);
 
-app.get("/register", redirectIfAuthenticated, (req, res) => {
-  res.render("register");
-});
+app.get("/register", redirectIfAuthenticated, getUserController);
 
 app.post("/register", redirectIfAuthenticated, storeUserController);
 

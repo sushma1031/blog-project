@@ -6,6 +6,11 @@
 
     <div class="row">
       <div class="col-lg-8 pb-5 mx-auto">
+        <% if(errorMessage) {%>
+          <div class="alert alert-danger" role="alert">
+            <%= errorMessage %>
+          </div>
+          <% } %>
         <div class="card">
           <div class="card-body">
 

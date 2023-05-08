@@ -11,12 +11,19 @@ module.exports = (req, res) => {
     };
     return res.render("error", arguments);
   } else {
-
-    User.create(req.body)
-      .then((registeredUser) => {
-        req.session.userId = registeredUser._id;
-        res.redirect("/");
+    User.findOne({ email: req.body.email })
+      .then((prevRegistered) => {
+        if (prevRegistered) {
+          return res.redirect("/register?error=alreadyregistered");
+        } else {
+          User.create(req.body)
+            .then((registeredUser) => {
+              req.session.userId = registeredUser._id;
+              res.redirect("/");
+            })
+            .catch((err) => console.log(err.message));
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => console.log(error.message));
   }
 };
