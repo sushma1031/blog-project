@@ -82,10 +82,10 @@ p.navbar-brand{
 }
 
 
-h5.title-line {
+h6.title-line {
     margin-bottom: 0;
     padding-bottom: 0.25rem;
-    line-height: 1.9rem;
+    line-height: 1.5rem;
     padding-top: 0.25rem;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;

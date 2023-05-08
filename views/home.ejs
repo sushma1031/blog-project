@@ -18,15 +18,15 @@
 </p>
 <h3><span class="underline">Featured Posts</span></h3>
 
-<div class="row pt-5 pb-5 px-3 px-lg-5">
+<div class="row pt-5 pb-5 mx-lg-4 px-3 px-lg-5">
   <% posts.forEach((post)=> { %>
-    <div class="col-lg-4 pb-3 px-3">
+    <div class="col-lg-4 pb-3 px-2">
     
       <div class="featured-post">
         <div class="featured-image"><img src="<%= post.image.url %>" alt="thumbnail"></div>
         <div class="featured-body">
 
-            <h5 class="title-line"><a href="/posts/<%=post._id%>"><%= post.title %></a></h4>
+            <h6 class="title-line"><a href="/posts/<%=post._id%>"><%= post.title %></a></h6>
           <p class="red-op">
             <%= post.username %> · <%= post.relativeDate %>
           </p>

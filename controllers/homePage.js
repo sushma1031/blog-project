@@ -4,7 +4,7 @@ const date = require("../date.js");
 module.exports = (req, res) => {
   Post.find({})
     .sort({ createdAt: -1 })
-    .limit(3)
+    .limit(6)
     .then((posts) => {
       posts.forEach((post) => {
         post.relativeDate = date.calcDate(post.createdAt);
