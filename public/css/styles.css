@@ -82,7 +82,7 @@ p.navbar-brand{
 }
 
 
-h6.title-line {
+h6.title-line, h5.title-line {
     margin-bottom: 0;
     padding-bottom: 0.25rem;
     line-height: 1.5rem;
