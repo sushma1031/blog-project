@@ -15,6 +15,7 @@ The project was initialy built as part of The Complete 2020 Web Development Boot
 - Made web app responsive
 - Image upload (to cloud) facility for each post
 - User registration, login and authentication
+  - User registration is currently restricted to specific users
 - Formatted about and contact pages
 - Added a seperate page to view all posts in the order of newest first
 - Added option to delete a post
