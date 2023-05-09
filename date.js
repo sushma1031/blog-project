@@ -22,7 +22,7 @@ exports.calcDate = function (postedDate) {
     return years + " years"
   }
   if (months > 5) {
-    if (months == 1) return "1 year";
+    if (months == 1) return "1 month";
     return months + " months"
   }
   let options = {
