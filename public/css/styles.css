@@ -234,14 +234,12 @@ h5.title-line {
     opacity: 0.8;
 }
 
-.modal-open .contact-form,
-.modal-open .starting-content,
-.modal-open h1 {
+.modal-open h1, .modal-open>p, .modal-open form {
     opacity: 0.5;
 }
 
-.red-text {
-    color: rgb(244, 23, 23);
+.bold {
+   font-weight: bold;
 }
 
 @media (max-width: 1028px) {
