@@ -4,7 +4,7 @@
   <p class="starting-content res-text">
     If any of my words resonated with you, or if you have any suggestions, or you just want to say hi!
   </p>
-  <form action="mailto:sushmajram@gmail.com" method="post" enctype="text/plain">
+  <form class="contact-form">
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
       <small id="contentHelp" class="form-text text-muted">(required)</small>
@@ -24,7 +24,17 @@
       <small id="contentHelp" class="form-text text-muted">(required)</small>
       <textarea class="form-control" name="message" id="message" rows="5" required></textarea>
     </div>
-    <input class="btn btn-secondary" type="submit" name="button">
+    <button class="btn btn-secondary" type="button" name="button" id="open-modal">Submit</button>
   </form>
 
+    <div class="contact-modal mx-auto px-2 py-2" id="modal" style="display: none;">
+      <div class="message">
+        <h5>Thank you for your message!</h5>
+        <p>This form is currently static and is <span style="color: rgb(255, 15, 15)">not accepting responses.</span>
+          If you wish to contact me, kindly reach me via email at sushmajram@gmail.com.</p>
+      </div>
+      <button type="button" id="close-modal"><i class="fa-solid fa-xmark" style="color: #f1f1f1;"></i></button>
+    </div>
+
+  <script src="/script.js" type="text/javascript"></script>
   <%- include("partials/footer"); -%>
