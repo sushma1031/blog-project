@@ -115,7 +115,7 @@ app.get("/logout", (req, res) => {
 app.use((req, res, next) => {
   const arguments = {
     statusCode: "404",
-    message: "We couldn’t find that page you’re looking for.",
+    message: "We couldn’t find the page you’re looking for.",
     redirect: "/",
     button: "Go Home",
   };
