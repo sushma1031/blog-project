@@ -237,6 +237,10 @@ h6.title-line, h5.title-line {
     opacity: 0.5;
 }
 
+.red-text {
+    color: rgb(244, 23, 23);
+}
+
 @media (max-width: 1028px) {
     .featured-image {
         width: 100%;
