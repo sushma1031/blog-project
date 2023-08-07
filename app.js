@@ -62,6 +62,7 @@ const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
 const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
 const auth = require("./controllers/middleware.js").auth;
+const logoutUserController = require("./controllers/logoutUser.js");
 const deletePostController = require("./controllers/deletePost.js");
 
 app.use(function (req, res, next) {
@@ -101,15 +102,7 @@ app.get("/posts/:postID", getPostController);
 
 app.get("/delete/:postID", auth, deletePostController);
 
-app.get("/logout", (req, res) => {
-  if (req.session.userId) {
-    req.session.destroy(() => {
-      res.redirect("/");
-    });
-  } else {
-    res.redirect("/login");
-  }
-});
+app.get("/logout", logoutUserController);
 
 app.use((req, res, next) => {
   const arguments = {
