@@ -22,6 +22,8 @@ mongoose.connect(mongoDBURL)
   .then(() => console.log("Connected to Mongo."))
   .catch(err => console.log(err.message));
 
+mongoose.set("sanitizeFilter", true);
+
 //Enabling Sessions
 app.use(
   expressSession({
