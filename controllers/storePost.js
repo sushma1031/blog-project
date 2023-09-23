@@ -1,4 +1,5 @@
 const Post = require("../database/Post.js");
+const sanitizeHtml = require("sanitize-html");
 
 module.exports = (req, res) => {
   if (!req.file || Object.keys(req.file).length === 0) {
@@ -7,11 +8,19 @@ module.exports = (req, res) => {
   const image = {
     url: req.file.path,
     id: req.file.filename,
-    source: req.body.imageSource,
+    source: sanitizeHtml(req.body.imageSource, {
+      allowedTags: ['a'],
+      allowedAttributes: {
+        'a': ['href']
+      }
+    })
   };
 
+  const { imageSource, unsantinisedContent, ...post } = req.body;
+
   Post.create({
-    ...req.body,
+    ...post,
+    content: sanitizeHtml(unsantinisedContent),
     image,
   })
     .then(() => {
