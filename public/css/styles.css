@@ -74,17 +74,15 @@ p.navbar-brand {
     color: #55cbba !important;
 }
 
-.home-btn {
+.home-btn, .home-btn:active {
     background-color: #46a597;
     border-color: #46a597;
 }
 
 .home-btn:hover {
-    background-color: #55cbba;
-    border-color: #55cbba;
-    color: #2c2c2c;
+    background-color: #247569;
+    border-color: #247569;
 }
-
 
 h6.title-line,
 h5.title-line {
@@ -144,6 +142,16 @@ h5.title-line {
 .dropdown a.dropdown-toggle {
     color: rgba(100, 100, 100, 0.85);
 
+}
+
+.warning-text{
+    font-weight: bold;
+    padding-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.modal-post-title{
+    font-weight: bold;
 }
 
 .post-image {
