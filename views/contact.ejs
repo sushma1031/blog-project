@@ -24,17 +24,22 @@
       <small id="contentHelp" class="form-text text-muted">(required)</small>
       <textarea class="form-control" name="message" id="message" rows="5" required></textarea>
     </div>
-    <button class="btn btn-secondary" type="button" name="button" id="open-modal">Submit</button>
+    <button id="openContactModal" class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#contactModal">Submit</button>
   </form>
 
-    <div class="contact-modal mx-auto px-2 py-2" id="modal" style="display: none;">
-      <div class="message">
-        <h5>Thank you for your message!</h5>
-        <p>This form is currently static and is <span class="bold">not accepting responses.</span>
-          If you wish to contact me, kindly reach me via email at sushmajram@gmail.com.</p>
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="Contact form unavailable" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fs-5" id="contactModal">Thank you for your message!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>This form is currently static and is <span class="bold">not accepting responses.</span>
+              If you wish to contact me, kindly reach me via email at sushmajram@gmail.com.</p>
+          </div>
+        </div>
       </div>
-      <button type="button" id="close-modal"><i class="fa-solid fa-xmark" style="color: #f1f1f1;"></i></button>
     </div>
 
-  <script src="/script.js" type="text/javascript"></script>
   <%- include("partials/footer"); -%>
