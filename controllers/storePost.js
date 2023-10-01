@@ -16,11 +16,12 @@ module.exports = (req, res) => {
     })
   };
 
-  const { imageSource, unsantinisedContent, ...post } = req.body;
+  const { imageSource, content, ...post } = req.body;
+  const sanitizedContent = sanitizeHtml(content);
 
   Post.create({
     ...post,
-    content: sanitizeHtml(unsantinisedContent),
+    content: sanitizedContent,
     image,
   })
     .then(() => {
