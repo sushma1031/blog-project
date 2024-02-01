@@ -16,7 +16,9 @@ module.exports = (req, res) => {
         if (prevRegistered) {
           return res.redirect("/register?error=alreadyregistered");
         } else {
-          User.create(req.body)
+          ({ username, email, password } = req.body);
+          // To Do: Validate user input
+          User.create({username, email, password})
             .then((registeredUser) => {
               req.session.userId = registeredUser._id;
               res.redirect("/");
