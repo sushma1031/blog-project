@@ -14,15 +14,18 @@ module.exports = (req, res) => {
           image: post.image.url,
           imageSource: post.image.source,
         });
+      } else {
+        const arguments = {
+          statusCode: "404",
+          message: "We couldn’t find that page you’re looking for.",
+          redirect: "/",
+          button: "Go Home",
+        };
+        res.status(404).render("error", arguments);
       }
     })
     .catch((error) => {
-      const arguments = {
-        statusCode: "404",
-        message: "We couldn’t find that page you’re looking for.",
-        redirect: "/",
-        button: "Go Home",
-      };
-      res.status(404).render("error", arguments);
+      console.log(error.message)
+      res.redirect("/");
     });
 };
