@@ -1,22 +1,20 @@
 # Blog Website
-A dynamic blog website built using the following:
+A full-stack blog web application built using the following:
 
-- Front-end: Bootstrap
+- Front-end: EJS with Bootstrap
 - Back-end: Node.js with Express.js
 - Cloud database: MongoDB Atlas
 - Cloud image storage: Cloudinary
 - Cloud host: Render
 
-The project was initialy built as part of The Complete 2020 Web Development Bootcamp by Angela Yu. 
+## Snapshots
+![screenshot of the home page](public/github-images/image.png)
+![screenshot of the login page](public/github-images/image2.png)
+![screenshot of a blog post](public/github-images/image3.png)
 
-#### Functionality added by me:
-- Connected the database to cloud using MongoDB Atlas
-- Formatted home and post pages to include image, date and username for posts
-- Made web app responsive
-- Image upload (to cloud) facility for each post
-- User registration, login and authentication
-  - User registration is currently restricted to specific users
-- Formatted about and contact pages
-- Added a seperate page to view all posts in the order of newest first
-- Added option to delete a post
-- Deployed the web app to Render
+## Run Locally
+1. Clone the repository and install dependencies: `npm install`
+1. Start the server: `npm run start`
+1. Navigate to `localhost:3000` in your browser
+
+
