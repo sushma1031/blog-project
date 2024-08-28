@@ -1,16 +1,3 @@
-const form = document.querySelector(".needs-validation");
-form.addEventListener(
-  "submit",
-  (event) => {
-    if (isContentEmpty() || !form.checkValidity()) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    form.classList.add("was-validated");
-  },
-  false
-);
-
 function isContentEmpty() {
   let editor = tinymce.get("content");
   let invalidFbDiv = document.querySelector("#invalidFb");
@@ -25,3 +12,5 @@ function isContentEmpty() {
   editorArea.style.borderColor = "#eee";
   return false;
 }
+
+export default isContentEmpty;

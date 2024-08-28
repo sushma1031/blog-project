@@ -8,7 +8,7 @@
     });
   </script>
   <h1 class="title">Compose</h1>
-  <form class="needs-validation" action="/compose" method="post" enctype="multipart/form-data" novalidate>
+  <form class="needs-validation compose-form" action="/compose" method="post" enctype="multipart/form-data" novalidate>
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" name="username" id="username" required>
@@ -34,8 +34,8 @@
         </div>
       </div>
 
-    <button class="btn btn-secondary" type="submit" name="button">Publish</button>
+    <button class="btn btn-secondary" type="submit">Publish</button>
   </form>
-  <script src="/postContentValidation.js"></script>
+  <script src="/scripts/composeValidation.js" type="module"></script>
 
   <%- include("partials/footer"); -%>
