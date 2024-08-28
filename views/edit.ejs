@@ -1,0 +1,50 @@
+<%- include("partials/header"); -%>
+  <script>
+    let prevContent = <%- JSON.stringify(content) %>
+    tinymce.init({
+      selector: "textarea",
+      plugins: "anchor autolink codesample image link lists table checklist",
+      toolbar:
+        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | numlist bullist indent outdent | removeformat",
+      setup: function (editor) {
+        editor.on('init', function () {
+          this.setContent(prevContent);
+        });
+      }
+      });
+  </script>
+  <h1 class="title">Edit</h1>
+  <form class="needs-validation edit-form" action="" method="post" enctype="multipart/form-data" novalidate>
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" name="username" id="username" placeholder="<%= username %>">
+    </div>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" name="title" id="title" placeholder="<%= title %>">
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Post</label>
+      <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
+      <div class="invalid-feedback" id="invalidFb"></div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label for="image" class="form-label">Change image</label>
+        <input class="form-control" type="file" accept=".png,.jpg,.jpeg" name="image" id="image">
+        <div class="mt-3 thumbnail">
+          <img class="rounded thumbnail-img" width="200" height="125" src="<%= thumbnail %>">
+        </div>
+      </div>
+      <div class="col">
+        <label for="imageSource" class="form-label">Source</label>
+        <input type="text" class="form-control" name="imageSource" id="imageSource" placeholder="<a href=link> Artist </a> on <a href=link> Website </a>" value="<%= imageSource %>" required>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" type="submit">Update</button>
+  </form>
+  <script src="/scripts/editValidation.js" type="module"></script>
+
+  <%- include("partials/footer"); -%>
