@@ -22,9 +22,10 @@ const mongoDBURL =
     ? "mongodb://localhost:27017/postsDB"
     : `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
 
-mongoose.connect(mongoDBURL)
+mongoose
+  .connect(mongoDBURL)
   .then(() => console.log("Connected to Mongo."))
-  .catch(err => console.log(err.message));
+  .catch((err) => console.log(err.message));
 
 mongoose.set("sanitizeFilter", true);
 
