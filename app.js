@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
+const PROJECT_ENV = process.env.PROJECT_ENV || "dev";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -16,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //Cloud Database Connection
-const mongoDBURL = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
+const mongoDBURL =
+  PROJECT_ENV === "dev"
+    ? "mongodb://localhost:27017/postsDB"
+    : `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
 
 mongoose.connect(mongoDBURL)
   .then(() => console.log("Connected to Mongo."))
