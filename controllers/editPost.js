@@ -7,7 +7,9 @@ const get = (req, res) => {
     .then((post) => {
       if (post) {
         let regex = /(^.*upload\/)(.*)/;
-        const thumbnailUrl = post.image.url.replace(regex, `$1c_thumb,w_200,g_face/$2`);
+        let thumbnailUrl = "";
+        if(post.image?.url)
+          thumbnailUrl = post.image.url.replace(regex, `$1c_thumb,w_200,g_face/$2`);
         res.render("edit", {
           title: post.title,
           content: post.content,
@@ -37,7 +39,6 @@ const post = async (req, res) => {
     if (!req.file || Object.keys(req.file).length === 0) {
       changeImage = false;
     }
-    console.log(req.params.postID);
     let modifiedPost = await Post.findById(req.params.postID);
     let fieldsToUpdate = Object.keys(req.body).filter((k) =>Boolean(req.body[k]));
     for (let field of fieldsToUpdate) {
@@ -62,7 +63,7 @@ const post = async (req, res) => {
       modifiedPost.image.id = req.file.filename;
     }
     await modifiedPost.save();
-    res.redirect(`posts/${req.baseUrl}`);
+    res.redirect(`/posts/${req.baseUrl}`);
   } catch (error) {
     console.log(error.message);
   }
