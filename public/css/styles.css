@@ -175,6 +175,12 @@ h5.title-line {
     padding: 0 1rem 0 0.2rem;
 }
 
+.thumbnail {
+    max-width: 200px;
+    text-align: center;
+    overflow: hidden;
+}
+
 .red-op {
     opacity: 0.6;
 }

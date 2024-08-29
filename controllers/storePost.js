@@ -3,7 +3,10 @@ const sanitizeHtml = require("sanitize-html");
 
 module.exports = (req, res) => {
   if (!req.file || Object.keys(req.file).length === 0) {
-    return res.status(400).send("No files were uploaded.");
+    return res.status(400).send("No image uploaded.");
+  }
+  if (req.body.content === '') {
+    return res.status(400).send("No content.");
   }
   const image = {
     url: req.file.path,

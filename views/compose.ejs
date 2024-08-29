@@ -1,21 +1,27 @@
 <%- include("partials/header"); -%>
-
+  <script>
+    tinymce.init({
+      selector: "textarea",
+      plugins: "anchor autolink codesample image link lists table checklist",
+      toolbar:
+        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | numlist bullist indent outdent | removeformat",
+    });
+  </script>
   <h1 class="title">Compose</h1>
-    <form action="/compose" method="post" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label for="username" class="form-label" >Username</label>
-        <input type="text" class="form-control" name="username" id="username" required>
-      </div>
-      <div class="mb-3">
-        <label for="title" class = "form-label">Title</label>
-        <input type="text" class="form-control" name="title" id="title" required>
-      </div>
-      <div class="mb-3">
-        <label for="content" class="form-label">Post</label>
-        <small id="contentHelp" class="form-text text-muted">(Text should be in raw HTML format)</small>
-        <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
-        
-      </div>
+  <form class="needs-validation compose-form" action="/compose" method="post" enctype="multipart/form-data" novalidate>
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" name="username" id="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Post</label>
+      <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
+      <div class="invalid-feedback" id="invalidFb"></div>
+    </div>
 
       <div class="row mb-3">
         <div class="col">
@@ -28,8 +34,8 @@
         </div>
       </div>
 
-      <button class="btn btn-secondary" type="submit" name="button">Publish</button>
-    </form>
-
+    <button class="btn btn-secondary" type="submit">Publish</button>
+  </form>
+  <script src="/scripts/composeValidation.js" type="module"></script>
 
   <%- include("partials/footer"); -%>

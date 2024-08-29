@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
+const PROJECT_ENV = process.env.PROJECT_ENV || "dev";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -16,11 +17,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //Cloud Database Connection
-const mongoDBURL = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
+const mongoDBURL =
+  PROJECT_ENV === "dev"
+    ? "mongodb://localhost:27017/postsDB"
+    : `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
 
-mongoose.connect(mongoDBURL)
+mongoose
+  .connect(mongoDBURL)
   .then(() => console.log("Connected to Mongo."))
-  .catch(err => console.log(err.message));
+  .catch((err) => console.log(err.message));
 
 mongoose.set("sanitizeFilter", true);
 
@@ -65,6 +70,7 @@ const loginUserController = require("./controllers/loginUser.js");
 const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
 const auth = require("./controllers/middleware.js").auth;
 const logoutUserController = require("./controllers/logoutUser.js");
+const editPostController = require("./controllers/editPost.js");
 const deletePostController = require("./controllers/deletePost.js");
 
 app.use(function (req, res, next) {
@@ -98,9 +104,13 @@ app.post("/login", redirectIfAuthenticated, loginUserController);
 
 app.get("/compose", auth, createPostController);
 
-app.post("/compose", parser.single("image"), storePostController);
+app.post("/compose", auth, parser.single("image"), storePostController);
 
 app.get("/posts/:postID", getPostController);
+
+app.get("/edit/:postID", auth, editPostController.get);
+
+app.post("/edit/:postID", auth, parser.single("image"), editPostController.post);
 
 app.get("/delete/:postID", auth, deletePostController);
 
