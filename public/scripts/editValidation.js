@@ -7,7 +7,6 @@ let prevSrc = imageSrc.value;
 editForm.addEventListener(
   "submit",
   (event) => {
-    console.log(editForm.checkValidity());
     if (imageInput.files.length === 0) {
       imageSrc.value = prevSrc;
     }
