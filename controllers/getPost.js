@@ -1,4 +1,6 @@
 const Post = require("../database/Post.js");
+const User = require("../database/User.js");
+const mongoose = require("mongoose");
 const date = require("../date.js");
 
 module.exports = (req, res) => {
@@ -6,18 +8,24 @@ module.exports = (req, res) => {
     .then((post) => {
       if (post) {
         const day = date.getDate(post.createdAt);
-        res.render("post", {
-          title: post.title,
-          content: post.content,
-          username: post.username,
-          datePosted: day,
-          image: post.image.url,
-          imageSource: post.image.source,
-        });
+        let postCreator = "Anonymous";
+        User.findOne({ _id: post.creator})
+          .then((user) => {
+            if (user) postCreator = user.username;
+            return res.render("post", {
+              title: post.title,
+              content: post.content,
+              username: postCreator,
+              datePosted: day,
+              image: post.image.url,
+              imageSource: post.image.source,
+            });
+          })
+          .catch((e) => console.log(e.message));
       } else {
         const arguments = {
           statusCode: "404",
-          message: "We couldn’t find that page you’re looking for.",
+          message: "We couldn’t find the post you’re looking for.",
           redirect: "/",
           button: "Go Home",
         };
