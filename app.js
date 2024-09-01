@@ -76,6 +76,7 @@ const auth = require("./controllers/middleware.js").auth;
 const logoutUserController = require("./controllers/logoutUser.js");
 const editPostController = require("./controllers/editPost.js");
 const deletePostController = require("./controllers/deletePost.js");
+const deleteUserController = require("./controllers/deleteUser.js");
 
 app.use(function (req, res, next) {
   res.locals = {
@@ -119,6 +120,8 @@ app.post("/edit/:postID", auth, parser.single("image"), editPostController.post)
 app.get("/delete/posts/:postID", auth, deletePostController);
 
 app.get("/logout", logoutUserController);
+
+app.get("/delete/users/:userID", auth, deleteUserController);
 
 app.use((req, res, next) => {
   const arguments = {
