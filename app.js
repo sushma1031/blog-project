@@ -30,6 +30,7 @@ mongoose
 mongoose.set("sanitizeFilter", true);
 
 //Enabling Sessions
+const TWELVE_HOURS = 1000 * 60 * 60 * 12;
 app.use(
   expressSession({
     secret: process.env.SECRET,
@@ -38,6 +39,9 @@ app.use(
     store: connectMongo.create({
       mongoUrl: mongoDBURL,
     }),
+    cookie: {
+      maxAge: TWELVE_HOURS
+    }
   })
 );
 
