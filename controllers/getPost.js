@@ -25,7 +25,7 @@ module.exports = (req, res) => {
       } else {
         const arguments = {
           statusCode: "404",
-          message: "We couldn’t find that page you’re looking for.",
+          message: "We couldn’t find the post you’re looking for.",
           redirect: "/",
           button: "Go Home",
         };
