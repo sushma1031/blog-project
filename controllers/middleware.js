@@ -14,6 +14,7 @@ User.findById(req.session.userId)
         if (!user) {
           return res.redirect("/login");
         } else {
+          res.locals.username = user.username;
           return next();
         }
       })
