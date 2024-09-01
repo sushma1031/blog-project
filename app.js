@@ -116,7 +116,7 @@ app.get("/edit/:postID", auth, editPostController.get);
 
 app.post("/edit/:postID", auth, parser.single("image"), editPostController.post);
 
-app.get("/delete/:postID", auth, deletePostController);
+app.get("/delete/posts/:postID", auth, deletePostController);
 
 app.get("/logout", logoutUserController);
 
