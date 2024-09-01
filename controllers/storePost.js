@@ -24,6 +24,7 @@ module.exports = (req, res) => {
 
   Post.create({
     ...post,
+    creator: req.session.userId,
     content: sanitizedContent,
     image,
   })

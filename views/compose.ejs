@@ -10,8 +10,11 @@
   <h1 class="title">Compose</h1>
   <form class="needs-validation compose-form" action="/compose" method="post" enctype="multipart/form-data" novalidate>
     <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" id="username" required>
+      Posting as
+      <small
+        class="ms-1 px-2 py-1 fw-semibold text-dark-emphasis bg-light-subtle border border-dark-subtle rounded-2">
+        <%= username %>
+      </small>
     </div>
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
