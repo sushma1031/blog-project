@@ -60,6 +60,11 @@ hr {
 
 .nav-link {
     letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.dropdown-item {
+    letter-spacing: 0px;
 }
 
 p.navbar-brand {
