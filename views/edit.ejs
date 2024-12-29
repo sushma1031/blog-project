@@ -3,7 +3,7 @@
     let prevContent = <%- JSON.stringify(content) %>
     tinymce.init({
       selector: "textarea",
-      plugins: "anchor autolink codesample image link lists table checklist",
+      plugins: "anchor autolink codesample image link lists",
       toolbar:
         "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | numlist bullist indent outdent | removeformat",
       setup: function (editor) {
@@ -15,10 +15,6 @@
   </script>
   <h1 class="title">Edit</h1>
   <form class="needs-validation edit-form" action="" method="post" enctype="multipart/form-data" novalidate>
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" id="username" value="<%= username %>">
-    </div>
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
       <input type="text" class="form-control" name="title" id="title" value="<%= title %>">
