@@ -2,7 +2,7 @@ const Post = require("../database/Post.js");
 const date = require("../utils/date.js");
 
 module.exports = (req, res) => {
-  Post.find({})
+  Post.find({}, {creator: 0})
     .sort({ createdAt: -1 })
     .then((posts) => {
       posts.forEach((post) => {

@@ -1,4 +1,5 @@
 const Post = require("../database/Post.js");
+const { ObjectId } = require("mongoose").Types
 const sanitizeHtml = require("sanitize-html");
 
 module.exports = (req, res) => {
@@ -24,7 +25,7 @@ module.exports = (req, res) => {
 
   Post.create({
     ...post,
-    creator: req.session.userId,
+    creator: new ObjectId(req.session.userId),
     content: sanitizedContent,
     image,
   })
