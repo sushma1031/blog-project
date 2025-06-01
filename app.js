@@ -71,8 +71,7 @@ const storeUserController = require("./controllers/storeUser.js");
 const getUserController = require("./controllers/getUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
-const redirectIfAuthenticated = require("./controllers/middleware.js").redirect;
-const auth = require("./controllers/middleware.js").auth;
+const {redirectIfAuthenticated, authenticate} = require("./controllers/auth.js");
 const logoutUserController = require("./controllers/logoutUser.js");
 const editPostController = require("./controllers/editPost.js");
 const deletePostController = require("./controllers/deletePost.js");
@@ -107,21 +106,21 @@ app.get("/login", redirectIfAuthenticated, loginController);
 
 app.post("/login", redirectIfAuthenticated, loginUserController);
 
-app.get("/compose", auth, createPostController);
+app.get("/compose", authenticate, createPostController);
 
-app.post("/compose", auth, parser.single("image"), storePostController);
+app.post("/compose", authenticate, parser.single("image"), storePostController);
 
 app.get("/posts/:postID", getPostController);
 
-app.get("/edit/:postID", auth, editPostController.get);
+app.get("/edit/:postID", authenticate, editPostController.get);
 
-app.post("/edit/:postID", auth, parser.single("image"), editPostController.post);
+app.post("/edit/:postID", authenticate, parser.single("image"), editPostController.post);
 
-app.get("/delete/posts/:postID", auth, deletePostController);
+app.get("/delete/posts/:postID", authenticate, deletePostController);
 
 app.get("/logout", logoutUserController);
 
-app.get("/delete/users/:userID", auth, deleteUserController);
+app.get("/delete/users/:userID", authenticate, deleteUserController);
 
 app.use((req, res, next) => {
   const arguments = {
