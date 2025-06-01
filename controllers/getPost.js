@@ -1,7 +1,7 @@
 const Post = require("../database/Post.js");
 const User = require("../database/User.js");
 const mongoose = require("mongoose");
-const date = require("../date.js");
+const date = require("../utils/date.js");
 
 module.exports = (req, res) => {
   Post.findOne({ _id: req.params.postID })

@@ -1,5 +1,5 @@
 const Post = require("../database/Post.js");
-const date = require("../date.js");
+const date = require("../utils/date.js");
 
 module.exports = (req, res) => {
   Post.find({})
