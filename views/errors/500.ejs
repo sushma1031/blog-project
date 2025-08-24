@@ -1,0 +1,15 @@
+<%- include("../partials/header"); -%>
+
+  <div class="d-flex align-items-center justify-content-center pt-5">
+    <div class="text-center">
+      <h1 class="display-3 fw-bold">
+        <%= statusCode %>
+      </h1>
+      <p class="fw-bold text-responsive">
+        <%= typeof message !=="undefined" ? message : "A server side error occurred." %>
+      </p>
+      <a href="/" class="btn btn-primary">Home</a>
+    </div>
+  </div>
+
+<%- include("../partials/footer"); -%>

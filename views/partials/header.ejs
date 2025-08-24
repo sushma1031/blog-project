@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Therefore I Am</title>
+  <title><%= typeof title !=="undefined" ? title : "Therefore I Am" %></title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -70,7 +70,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <a class="btn btn-danger" href="/delete/users/<%= auth %>" class="link">Delete</a>
+          <a class="btn btn-danger" href="/users/<%= auth %>/delete" class="link">Delete</a>
         </div>
       </div>
     </div>

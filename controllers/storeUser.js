@@ -1,17 +1,16 @@
+const config = require("../config.js");
 const User = require("../database/User.js");
 
 module.exports = (req, res) => {
-  if (req.body.email !== process.env.EMAIL) {
-    if (process.env.PROJECT_ENV && process.env.PROJECT_ENV === "production") {
-      const arguments = {
-        statusCode: "Sorry :(",
-        message:
-          "You do not have permission to create an account. Please contact the owner of this blog.",
-        redirect: "/contact",
-        button: "Contact",
-      };
-      return res.render("error", arguments);
-    }
+  if (
+    process.env.NODE_ENV === "production" &&
+    req.body.email !== config.adminEmail
+  ) {
+    const arguments = {
+      statusCode: 400,
+      message: "You do not have permission to create an account. Please contact the owner of this blog.",
+    };
+    return res.status(400).render("errors/400", arguments);
   }
   User.findOne({ email: req.body.email })
     .then((prevRegistered) => {

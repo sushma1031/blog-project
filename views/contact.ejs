@@ -1,7 +1,7 @@
 <%- include("partials/header"); -%>
 
   <h1 class="title">Contact Me</h1>
-  <p class="starting-content res-text">
+  <p class="starting-content text-responsive">
     If any of my words resonated with you, or if you have any suggestions, or you just want to say hi!
   </p>
   <form class="contact-form">
@@ -27,11 +27,11 @@
     <button id="openContactModal" class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#contactModal">Submit</button>
   </form>
 
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="Contact form unavailable" aria-hidden="true">
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title fs-5" id="contactModal">Thank you for your message!</h5>
+            <h1 class="modal-title fs-5" id="contactModalLabel">Thank you for your message!</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">

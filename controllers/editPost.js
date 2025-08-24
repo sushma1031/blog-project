@@ -20,16 +20,19 @@ const get = (req, res) => {
       } else {
         const arguments = {
           statusCode: "404",
-          message: "No such post.",
+          message: "Post not found.",
           redirect: "/posts",
-          button: "All Posts",
+          redirectText: "All Posts",
         };
-        res.status(404).render("error", arguments);
+        res.status(404).render("errors/404", arguments);
       }
     })
     .catch((error) => {
-      console.log(error.message);
-      res.redirect("/");
+      console.error(`Unexpected error while fetching post for edit: ${req.params.postID}`, error);
+      res.status(500).render("errors/500", {
+        statusCode: 500,
+        message: "An unexpected error occurred.",
+      });
     });
 };
 
@@ -57,17 +60,31 @@ const post = async (req, res) => {
     }
     if (changeImage) {
       if (modifiedPost.image?.id) {
-        await cloudinary.uploader.destroy(modifiedPost.image.id);
+        try {
+          await cloudinary.uploader.destroy(modifiedPost.image.id);
+        } catch (error) {
+          console.error(
+            `Failed to delete previous image for post: ${req.params.postID}`,
+            error
+          );
+          return res.status(500).render("errors/500", {
+            statusCode: 500,
+            message: "Failed to replace post image. Please try again later.",
+          });
+        }
       }
       modifiedPost.image.url = req.file.path;
       modifiedPost.image.id = req.file.filename;
     }
     await modifiedPost.save();
-    res.redirect(`/posts/${req.baseUrl}`);
+    res.redirect(`/posts/${req.params.postID}`);
   } catch (error) {
-    console.log(error.message);
+    console.error(`Unexpected error while updating post: ${req.params.postID}`, error);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "An unexpected error occurred while saving changes.",
+    });
   }
-
 };
 
 module.exports = { get, post };

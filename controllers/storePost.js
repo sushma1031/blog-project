@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return res.status(400).send("No image uploaded.");
   }
   if (req.body.content === '') {
-    return res.status(400).send("No content.");
+    return res.status(400).send("No content provided.");
   }
   const image = {
     url: req.file.path,
@@ -32,5 +32,11 @@ module.exports = (req, res) => {
     .then(() => {
       res.redirect("/");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.error("Unexpected error while storing post", err);
+      res.status(500).render("errors/500", {
+        statusCode: 500,
+        message: "An unexpected error occurred while creating post.",
+      });
+    });
 };
