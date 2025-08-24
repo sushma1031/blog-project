@@ -1,6 +1,6 @@
 <%- include("partials/header"); -%>
 
-  <h3><span class="underline">All Posts</span></h3>
+  <h1 class="fs-3 section-title"><span class="underline">All Posts</span></h3>
 
   <div class="row py-5 px-3 px-lg-5">
     <% posts.forEach((post, pindex)=> { %>
@@ -8,7 +8,7 @@
 
         <div class="flex">
 
-          <h6 class="title-line pe-2"><a href="/posts/<%=post._id%>">
+          <h6 class="title-link pe-2"><a href="/posts/<%=post._id%>">
               <%= post.title %>
             </a>
           </h6>
@@ -53,7 +53,7 @@
         </div>
         <p>
           <em>
-            <span class="red-op">
+            <span class="opacity-60">
               <%= post.dateString %>
             </span>
           </em>

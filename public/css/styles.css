@@ -28,7 +28,7 @@ button.navbar-toggler:focus {
     text-align: center;
 }
 
-h3 {
+.section-title {
     text-align: center;
     padding: 3rem 0 0;
     font-family: 'Poppins', sans-serif;
@@ -75,19 +75,27 @@ p.navbar-brand {
     color: #55cbba !important;
 }
 
-.home-btn,
-.home-btn:active {
+.btn-primary {
     background-color: #46a597;
     border-color: #46a597;
+    --bs-btn-active-bg: #247569;
+    --bs-btn-active-border-color: #247569;
 }
 
-.home-btn:hover {
+.btn-primary:hover, 
+.btn-primary:active {
     background-color: #247569;
     border-color: #247569;
+    outline: 0;
 }
 
-h6.title-line,
-h5.title-line {
+.btn-primary:focus-visible {
+    background-color: #247569;
+    border-color: #72b5ab;
+    outline: 0;
+}
+
+.title-link {
     margin-bottom: 0;
     padding-bottom: 0.25rem;
     line-height: 1.5rem;
@@ -123,13 +131,13 @@ h5.title-line {
     padding: 0.25rem 0 0.5rem;
 }
 
-.title-line a {
+.title-link a {
     color: #2c2c2c;
     text-decoration: none;
     transition: color 175ms ease-in-out;
 }
 
-.title-line a:hover {
+.title-link a:hover {
     color: #46A597;
     text-decoration: none;
 }
@@ -186,7 +194,7 @@ h5.title-line {
     overflow: hidden;
 }
 
-.red-op {
+.opacity-60 {
     opacity: 0.6;
 }
 
@@ -230,7 +238,7 @@ h5.title-line {
         height: auto;
     }
 
-    body .res-text {
+    body .text-responsive {
         font-size: larger;
     }
 
