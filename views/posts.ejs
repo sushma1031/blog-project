@@ -18,7 +18,7 @@
               <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/posts/<%=post._id%>" class="link">View</a></li>
-                <li><a class="dropdown-item" href="/edit/<%=post._id%>" class="link">Edit</a></li>
+                <li><a class="dropdown-item" href="/posts/<%=post._id%>/edit" class="link">Edit</a></li>
                 <li>
                   <a class="dropdown-item" href="#" role="button" data-bs-toggle="modal"
                     data-bs-target="#confirmDeletion<%=pindex%>">Delete</a>
@@ -43,7 +43,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a class="btn btn-danger" href="/delete/posts/<%=post._id%>" class="link">Delete</a>
+                    <a class="btn btn-danger" href="/posts/<%=post._id%>/delete" class="link">Delete</a>
                   </div>
                 </div>
               </div>

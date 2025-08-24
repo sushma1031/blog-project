@@ -108,15 +108,15 @@ app.post("/compose", authenticate, parser.single("image"), storePostController);
 
 app.get("/posts/:postID", getPostController);
 
-app.get("/edit/:postID", authenticate, editPostController.get);
+app.get("/posts/:postID/edit", authenticate, editPostController.get);
 
-app.post("/edit/:postID", authenticate, parser.single("image"), editPostController.post);
+app.post("/posts/:postID/edit", authenticate, parser.single("image"), editPostController.post);
 
-app.get("/delete/posts/:postID", authenticate, deletePostController);
+app.get("/posts/:postID/delete", authenticate, deletePostController);
 
 app.get("/logout", logoutUserController);
 
-app.get("/delete/users/:userID", authenticate, deleteUserController);
+app.get("/users/:userID/delete", authenticate, deleteUserController);
 
 app.use((req, res, next) => {
   const arguments = {
