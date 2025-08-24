@@ -1,4 +1,4 @@
-require("dotenv").config();
+const config = require("./config.js")
 const express = require("express");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
@@ -7,8 +7,6 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
-const PROJECT_ENV = process.env.PROJECT_ENV || "dev";
-const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -17,15 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //Cloud Database Connection
-const mongoDBURL =
-  PROJECT_ENV === "dev"
-    ? "mongodb://localhost:27017/postsDB"
-    : `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.1quaohb.mongodb.net/postsDB`;
-
 mongoose
-  .connect(mongoDBURL)
+  .connect(config.mongoURI)
   .then(() => console.log("Connected to Mongo."))
-  .catch((err) => console.log(err.message));
+  .catch((err) => {
+    console.log(err.message);
+    process.exit(1);
+  });
 
 mongoose.set("sanitizeFilter", true);
 
@@ -33,23 +29,23 @@ mongoose.set("sanitizeFilter", true);
 const TWELVE_HOURS = 1000 * 60 * 60 * 12;
 app.use(
   expressSession({
-    secret: process.env.SECRET,
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: connectMongo.create({
-      mongoUrl: mongoDBURL,
+      mongoUrl: config.mongoURI,
     }),
     cookie: {
-      maxAge: TWELVE_HOURS
-    }
+      maxAge: TWELVE_HOURS,
+    },
   })
 );
 
 //Cloud Image Storage
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
+  cloud_name: config.cloudinary.name,
+  api_key: config.cloudinary.apiKey,
+  api_secret: config.cloudinary.apiSecret,
 });
 
 const storage = new CloudinaryStorage({
@@ -132,6 +128,6 @@ app.use((req, res, next) => {
   res.status(404).render("error", arguments);
 });
 
-app.listen(PORT, function () {
-  console.log(`Server started on port ${PORT}`);
+app.listen(config.port, function () {
+  console.log(`Server started on port ${config.port}`);
 });
