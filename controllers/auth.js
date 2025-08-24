@@ -1,12 +1,12 @@
 const User = require("../database/User");
 
-const redirect = (req, res, next) => {
+const redirectIfAuthenticated = (req, res, next) => {
   if (req.session && req.session.userId) {
     return res.redirect("/");
   } else next();
 };
 
-const auth = (req, res, next) => {
+const authenticate = (req, res, next) => {
   if (!req.session || !req.session.userId)
     return res.redirect("/login");
 
@@ -25,4 +25,4 @@ const auth = (req, res, next) => {
         });
 };
 
-module.exports = {redirect, auth}
+module.exports = {redirectIfAuthenticated, authenticate}

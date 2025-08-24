@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema({
   title: String,
   content: { type: String, default: "" },
-  creator: mongoose.Types.ObjectId,
+  creator: { type: mongoose.Types.ObjectId, ref: "User" },
   image: {
     url: String,
     id: String,
@@ -13,18 +13,6 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-});
-
-postSchema.pre("save", async function (next) {
-  try {
-    const user = await mongoose.model("User").findById(this.creator);
-    if (!user) {
-      throw new Error("Invalid user");
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
 const Post = mongoose.model("Post", postSchema);

@@ -1,27 +1,19 @@
 const Post = require("../database/Post.js");
-const User = require("../database/User.js");
-const mongoose = require("mongoose");
-const date = require("../date.js");
+const date = require("../utils/date.js");
 
 module.exports = (req, res) => {
   Post.findOne({ _id: req.params.postID })
+    .populate('creator', 'username')
     .then((post) => {
       if (post) {
-        const day = date.getDate(post.createdAt);
-        let postCreator = "Anonymous";
-        User.findOne({ _id: post.creator})
-          .then((user) => {
-            if (user) postCreator = user.username;
-            return res.render("post", {
-              title: post.title,
-              content: post.content,
-              username: postCreator,
-              datePosted: day,
-              image: post.image.url,
-              imageSource: post.image.source,
-            });
-          })
-          .catch((e) => console.log(e.message));
+        return res.render("post", {
+          title: post.title,
+          content: post.content,
+          username: post.creator?.username || "Anonymous",
+          datePosted: date.getDate(post.createdAt),
+          image: post.image.url,
+          imageSource: post.image.source,
+        });
       } else {
         const arguments = {
           statusCode: "404",
