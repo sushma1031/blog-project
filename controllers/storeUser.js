@@ -7,13 +7,10 @@ module.exports = (req, res) => {
     req.body.email !== config.adminEmail
   ) {
     const arguments = {
-      statusCode: "Sorry :(",
-      message:
-        "You do not have permission to create an account. Please contact the owner of this blog.",
-      redirect: "/contact",
-      button: "Contact",
+      statusCode: 400,
+      message: "You do not have permission to create an account. Please contact the owner of this blog.",
     };
-    return res.render("error", arguments);
+    return res.status(400).render("errors/400", arguments);
   }
   User.findOne({ email: req.body.email })
     .then((prevRegistered) => {

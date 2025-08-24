@@ -13,5 +13,11 @@ module.exports = (req, res) => {
         posts: posts,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.error("Unexpected error while fetching posts", err);
+      res.status(500).render("errors/500", {
+        statusCode: 500,
+        message: "Failed to fetch posts.",
+      });
+    });
 };

@@ -15,17 +15,19 @@ module.exports = (req, res) => {
           imageSource: post.image.source,
         });
       } else {
-        const arguments = {
-          statusCode: "404",
+        return res.status(404).render("errors/404", {
+          title: "Not Found",
           message: "We couldn’t find the post you’re looking for.",
-          redirect: "/",
-          button: "Go Home",
-        };
-        res.status(404).render("error", arguments);
+          redirect: "/posts",
+          redirectText: "All Posts"
+        });
       }
     })
     .catch((error) => {
-      console.log(error.message)
-      res.redirect("/");
+      console.error("Unexpected error while fetching post", error);
+      res.status(500).render("errors/500", {
+        statusCode: 500,
+        message: "An unexpected error occurred.",
+      });
     });
 };

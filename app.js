@@ -119,13 +119,7 @@ app.get("/logout", logoutUserController);
 app.get("/users/:userID/delete", authenticate, deleteUserController);
 
 app.use((req, res, next) => {
-  const arguments = {
-    statusCode: "404",
-    message: "We couldn’t find the page you’re looking for.",
-    redirect: "/",
-    button: "Go Home",
-  };
-  res.status(404).render("error", arguments);
+  res.status(404).render("errors/404", {title: "Page Not Found"});
 });
 
 app.listen(config.port, function () {

@@ -6,14 +6,23 @@ module.exports = (req, res) => {
 
   User.findOne({ email })
     .then((foundUser) => {
-      if (foundUser) {
-        bcrypt.compare(password, foundUser.password, function (err, result) {
-          if (result) {
-            req.session.userId = foundUser._id;
-            res.redirect("/");
-          } else res.redirect("/login?error=incorrectpassword");
-        });
-      } else res.redirect("/login?error=invalidemail");
+      if (!foundUser) { 
+        return res.redirect("/login?error=invalidcredentials");
+      }
+      bcrypt.compare(password, foundUser.password, function (err, result) {
+        if (err) {
+          console.error("Bcrypt error:", err);
+          return res.redirect("/login?error=server");
+        }
+        if (result) {
+          req.session.userId = foundUser._id;
+          return res.redirect("/");
+        }
+        return res.redirect("/login?error=invalidcredentials");
+      });
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.error(`Unexpected error while logging in user: ${email}`, error);
+      res.redirect("/login?error=server")
+    });
 };

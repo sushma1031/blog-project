@@ -1,11 +1,11 @@
 module.exports = (req, res) => {
   let message;
   switch (req.query.error) {
-    case "invalidemail":
-      message = "This email is not registered.";
+    case "server":
+      message = "Internal server error."
       break;
-    case "incorrectpassword":
-      message = "Incorrect password.";
+    case "invalidcredentials":
+      message = "Invalid credentials provided.";
       break;
     default:
       message = undefined;

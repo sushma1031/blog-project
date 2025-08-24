@@ -1,0 +1,18 @@
+<%- include("../partials/header"); -%>
+
+  <div class="d-flex align-items-center justify-content-center pt-5">
+    <div class="text-center">
+      <h1 class="display-3 fw-bold pb-2">404</h1>
+      <p class="fs-3 text-responsive">
+        <span class="text-danger">Uh-Oh!</span>
+        <%= typeof message !== "undefined" ? message : "We couldn’t find the page you’re looking for." %>
+      </p>
+      <a 
+        href='<%= typeof redirect !== "undefined" ? redirect : "/" %>' 
+        class="btn btn-primary">
+        <%= typeof redirectText !== "undefined" ? redirectText : "Home" %>
+      </a>
+    </div>
+  </div>
+
+<%- include("../partials/footer"); -%>
