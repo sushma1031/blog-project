@@ -15,7 +15,7 @@ const envSchema = z.object({
   CLOUDINARY_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
-  RENDER_API_KEY:z.string(),
+  RENDER_API_KEY: z.string(),
   ADMIN_EMAIL: z.string(),
 });
 

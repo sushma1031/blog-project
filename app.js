@@ -1,29 +1,18 @@
-const config = require("./config.js")
+const config = require("./config.js");
 const express = require("express");
 const ejs = require("ejs");
-const mongoose = require("mongoose");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { connectDB, closeDBConn } = require("./database/db.js");
+const parser = require("./middleware/cloudinary-upload.js");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
 
 const app = express();
 
+connectDB();
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
-//Cloud Database Connection
-mongoose
-  .connect(config.mongoURI)
-  .then(() => console.log("Connected to Mongo."))
-  .catch((err) => {
-    console.log(err.message);
-    process.exit(1);
-  });
-
-mongoose.set("sanitizeFilter", true);
 
 //Enabling Sessions
 const TWELVE_HOURS = 1000 * 60 * 60 * 12;
@@ -41,23 +30,6 @@ app.use(
   })
 );
 
-//Cloud Image Storage
-cloudinary.config({
-  cloud_name: config.cloudinary.name,
-  api_key: config.cloudinary.apiKey,
-  api_secret: config.cloudinary.apiSecret,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "tia-blog-images",
-    allowedFormats: ["jpg", "png"],
-    transformation: [{ width: 1280, height: 720, crop: "fill" }],
-  },
-});
-const parser = multer({ storage: storage });
-
 const createPostController = require("./controllers/createPost.js");
 const homePageController = require("./controllers/homePage.js");
 const getAllPostsController = require("./controllers/getAllPosts.js");
@@ -67,11 +39,14 @@ const storeUserController = require("./controllers/storeUser.js");
 const getUserController = require("./controllers/getUser.js");
 const loginController = require("./controllers/login.js");
 const loginUserController = require("./controllers/loginUser.js");
-const {redirectIfAuthenticated, authenticate} = require("./controllers/auth.js");
 const logoutUserController = require("./controllers/logoutUser.js");
 const editPostController = require("./controllers/editPost.js");
 const deletePostController = require("./controllers/deletePost.js");
 const deleteUserController = require("./controllers/deleteUser.js");
+const {
+  redirectIfAuthenticated,
+  authenticate,
+} = require("./middleware/auth.js");
 
 app.use(function (req, res, next) {
   res.locals = {
@@ -119,7 +94,7 @@ app.get("/logout", logoutUserController);
 app.get("/users/:userID/delete", authenticate, deleteUserController);
 
 app.use((req, res, next) => {
-  res.status(404).render("errors/404", {title: "Page Not Found"});
+  res.status(404).render("errors/404", { title: "Page Not Found" });
 });
 
 app.listen(config.port, function () {
