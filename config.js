@@ -41,6 +41,10 @@ const config = {
   render: {
     apiKey: parsed.data.RENDER_API_KEY,
   },
+  scripts: {
+    fontAwesome: envVars.FONTAWESOME_KIT,
+    tinyMCE: envVars.TINYMCE_API_KEY,
+  },
 };
 
 module.exports = config;

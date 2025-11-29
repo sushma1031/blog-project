@@ -51,6 +51,7 @@ const {
 app.use(function (req, res, next) {
   res.locals = {
     auth: req.session.userId,
+    scripts: config.scripts,
   };
   next();
 });
