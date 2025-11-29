@@ -111,11 +111,13 @@ p.navbar-brand {
     background-color: #f1f1f1;
     overflow: hidden;
     text-align: center;
+    position: relative;
 }
 
 .featured-image img {
     height: inherit;
-    transform: scale(1);
+    width: 100%;
+    object-fit: cover;
     opacity: 1;
     transition-property: transform, opacity;
     transition-duration: 200ms;
