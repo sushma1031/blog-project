@@ -97,6 +97,22 @@ app.use((req, res, next) => {
   res.status(404).render("errors/404", { title: "Page Not Found" });
 });
 
-app.listen(config.port, function () {
+const server = app.listen(config.port, function () {
   console.log(`Server started on port ${config.port}`);
 });
+
+let isShuttingDown = false;
+const shutdown = async () => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  console.log("\nReceived kill signal, shutting down gracefully");
+
+  server.close(async () => {
+    console.log("Closing remaining connections");
+    closeDBConn();
+  });
+};
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
