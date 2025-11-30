@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
   <meta charset="utf-8">
   <title><%= typeof title !=="undefined" ? title : "Therefore I Am" %></title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link type="image/png" sizes="16x16" rel="icon" href="/favicon.png">
 
   <!-- Google Fonts -->
@@ -24,14 +22,26 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-
       <p class="navbar-brand">THEREFORE I AM</p>
-
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form class="d-flex search-bar" action="/search">
+          <input 
+            type="text" 
+            class="form-control search-input" 
+            placeholder="Search by title..." 
+            aria-label="search bar" 
+            name="title" 
+            required
+            pattern=".*\S+.*">
+          <button class="btn search-btn" type="submit">
+            <span class="sr-only">Search</span>
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item" id="home"><a class="nav-link" href="/">HOME</a></li>
           <li class="nav-item" id="about"><a class="nav-link" href="/about">ABOUT</a></li>

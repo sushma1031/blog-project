@@ -43,10 +43,7 @@ const logoutUserController = require("./controllers/logoutUser.js");
 const editPostController = require("./controllers/editPost.js");
 const deletePostController = require("./controllers/deletePost.js");
 const deleteUserController = require("./controllers/deleteUser.js");
-const {
-  redirectIfAuthenticated,
-  authenticate,
-} = require("./middleware/auth.js");
+const { redirectIfAuthenticated, authenticate } = require("./middleware/auth.js");
 
 app.use(function (req, res, next) {
   res.locals = {
@@ -58,7 +55,7 @@ app.use(function (req, res, next) {
 
 //Routes
 
-app.get("/", homePageController);
+app.get("/", homePageController.getAllPosts);
 
 app.get("/about", (req, res) => {
   res.render("about");
@@ -69,6 +66,8 @@ app.get("/contact", (req, res) => {
 });
 
 app.get("/posts", getAllPostsController);
+
+app.get("/search", homePageController.searchPosts);
 
 app.get("/register", redirectIfAuthenticated, getUserController);
 
