@@ -8,8 +8,11 @@ const get = (req, res) => {
       if (post) {
         let regex = /(^.*upload\/)(.*)/;
         let thumbnailUrl = "";
-        if(post.image?.url)
-          thumbnailUrl = post.image.url.replace(regex, `$1c_thumb,w_200,g_face/$2`);
+        if (post.image?.url)
+          thumbnailUrl = post.image.url.replace(
+            regex,
+            `$1c_thumb,w_200,g_face/$2`
+          );
         res.render("edit", {
           title: post.title,
           content: post.content,
@@ -18,17 +21,20 @@ const get = (req, res) => {
           imageSource: post.image.source,
         });
       } else {
-        const arguments = {
+        const vals = {
           statusCode: "404",
           message: "Post not found.",
           redirect: "/posts",
           redirectText: "All Posts",
         };
-        res.status(404).render("errors/404", arguments);
+        res.status(404).render("errors/404", vals);
       }
     })
     .catch((error) => {
-      console.error(`Unexpected error while fetching post for edit: ${req.params.postID}`, error);
+      console.error(
+        `Unexpected error while fetching post for edit: ${req.params.postID}`,
+        error
+      );
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "An unexpected error occurred.",
@@ -43,7 +49,9 @@ const post = async (req, res) => {
       changeImage = false;
     }
     let modifiedPost = await Post.findById(req.params.postID);
-    let fieldsToUpdate = Object.keys(req.body).filter((k) =>Boolean(req.body[k]));
+    let fieldsToUpdate = Object.keys(req.body).filter((k) =>
+      Boolean(req.body[k])
+    );
     for (let field of fieldsToUpdate) {
       if (field === "imageSource") {
         modifiedPost.image.source = sanitizeHtml(req.body.imageSource, {
@@ -54,9 +62,7 @@ const post = async (req, res) => {
         });
       } else
         modifiedPost[field] =
-          field === "content"
-            ? sanitizeHtml(req.body[field])
-            : req.body[field];
+          field === "content" ? sanitizeHtml(req.body[field]) : req.body[field];
     }
     if (changeImage) {
       if (modifiedPost.image?.id) {
@@ -79,7 +85,10 @@ const post = async (req, res) => {
     await modifiedPost.save();
     res.redirect(`/posts/${req.params.postID}`);
   } catch (error) {
-    console.error(`Unexpected error while updating post: ${req.params.postID}`, error);
+    console.error(
+      `Unexpected error while updating post: ${req.params.postID}`,
+      error
+    );
     res.status(500).render("errors/500", {
       statusCode: 500,
       message: "An unexpected error occurred while saving changes.",
