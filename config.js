@@ -29,6 +29,7 @@ if (!parsed.success) {
 const config = {
   mongoURI: encodeURI(parsed.data.MONGO_URI),
   port: parsed.data.PORT,
+  env: parsed.data.NODE_ENV || "development",
 
   sessionSecret: parsed.data.SESSION_SECRET,
   adminEmail: parsed.data.ADMIN_EMAIL,
