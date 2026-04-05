@@ -12,10 +12,12 @@
       <i class="fa-solid fa-clock" style="color: #515151;"></i>
       <span class="created-date"><%= datePosted %></span>
     </p>
-    <div class="post-image">
-      <img src="<%= image %>" alt="sample image">
-    </div>
-    <p class="credit">Source: <%- imageSource %></p>
+    <% if (imageURL !== undefined && imageURL !== "") { %>
+      <div class="post-image">
+        <img src="<%= imageURL %>" alt="post image">
+      </div>
+      <p class="credit">Source: <%- imageSource %></p>
+    <% } %>
     <div class="post-content py-4 text-responsive">
       <%- content %>
     </div>

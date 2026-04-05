@@ -75,7 +75,7 @@ const getPost = (req, res) => {
           content: post.content,
           username: post.creator?.username || "Anonymous",
           datePosted: date.getDate(post.createdAt),
-          image: post.image.url,
+          imageURL: post.image.url,
           imageSource: post.image.source,
         });
       } else {
