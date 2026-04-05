@@ -57,6 +57,7 @@ const shutdown = async () => {
     console.log("Closing remaining connections");
     closeDBConn();
   });
+  server.closeAllConnections();
 };
 
 process.on("SIGTERM", shutdown);
