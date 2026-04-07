@@ -8,10 +8,14 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", function (next) {
-  const user = this;
+  if (!this.isModified("password")) return next();
 
-  bcrypt.hash(user.password, 10, function (error, hash) {
-    user.password = hash;
+  bcrypt.hash(this.password, 10, function (error, hash) {
+    if (error) {
+      return next(error);
+    }
+
+    this.password = hash;
     next();
   });
 });
