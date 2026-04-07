@@ -17,6 +17,7 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   RENDER_API_KEY: z.string(),
   ADMIN_EMAIL: z.string(),
+  NODE_ENV: z.enum(["development", "production"]).default("development"),
   DEFAULT_POST_IMAGE_URL: z.string(),
 });
 
@@ -30,7 +31,7 @@ if (!parsed.success) {
 const config = {
   mongoURI: encodeURI(parsed.data.MONGO_URI),
   port: parsed.data.PORT,
-  env: parsed.data.NODE_ENV || "development",
+  env: parsed.data.NODE_ENV,
 
   sessionSecret: parsed.data.SESSION_SECRET,
   adminEmail: parsed.data.ADMIN_EMAIL,
