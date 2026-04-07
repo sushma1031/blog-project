@@ -17,6 +17,7 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   RENDER_API_KEY: z.string(),
   ADMIN_EMAIL: z.string(),
+  DEFAULT_POST_IMAGE_URL: z.string(),
 });
 
 const parsed = envSchema.safeParse(envVars);
@@ -33,6 +34,9 @@ const config = {
 
   sessionSecret: parsed.data.SESSION_SECRET,
   adminEmail: parsed.data.ADMIN_EMAIL,
+  defaultPostImage: {
+    url: parsed.data.DEFAULT_POST_IMAGE_URL,
+  },
 
   cloudinary: {
     name: parsed.data.CLOUDINARY_NAME,

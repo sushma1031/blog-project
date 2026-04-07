@@ -22,7 +22,7 @@
     <div class="col-lg-4 pb-3 px-2">
     
       <div class="featured-post">
-        <div class="featured-image"><img src="<%= post.image.url %>" alt="thumbnail"></div>
+        <div class="featured-image"><img src="<%= (post.image?.url || defaultImage) %>" alt="thumbnail"></div>
         <div class="featured-body">
           <h3 class="title-link fs-6">
             <a href="/posts/<%=post._id%>"><%= post.title %></a>

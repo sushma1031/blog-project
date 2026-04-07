@@ -2,6 +2,7 @@ const Post = require("../database/models/Post.js");
 const { ObjectId } = require("mongoose").Types;
 const sanitizeHtml = require("sanitize-html");
 const cloudinary = require("cloudinary").v2;
+const config = require("../config.js");
 
 const getRecentPosts = (count = 3) => {
   return Post.find({}).sort({ createdAt: -1 }).limit(count);
@@ -25,18 +26,39 @@ const getPostForEdit = (id) => {
   return Post.findById(id);
 };
 
-const createPost = ({ title, content, imageUrl, imageId, imageSource, userId }) => {
+const createPost = ({ title, content, file, imageSource, userId }) => {
+  if (!title || title.trim().length === 0 || !content) {
+    const err = new Error("Title or content cannot be empty.");
+    err.code = "VALIDATION_ERROR";
+    throw err;
+  }
+
+  let imageData = undefined;
+
+  if (file != null) {
+    if (!imageSource || imageSource.trim().length === 0) {
+      const err = new Error("Provide the source/credit for the uploaded image.");
+      err.code = "VALIDATION_ERROR";
+      throw err;
+    }
+
+    imageData = {
+      url: file.path,
+      id: file.filename,
+      source: sanitizeHtml(imageSource, {
+        allowedTags: ["a"],
+        allowedAttributes: { a: ["href"] },
+      }),
+    };
+  }
+
   const sanitizedContent = sanitizeHtml(content);
-  const sanitizedImageSource = sanitizeHtml(imageSource, {
-    allowedTags: ["a"],
-    allowedAttributes: { a: ["href"] },
-  });
 
   return Post.create({
     title: title.trim(),
     content: sanitizedContent,
     creator: new ObjectId(userId),
-    image: { url: imageUrl, id: imageId, source: sanitizedImageSource },
+    image: imageData,
   });
 };
 
@@ -82,6 +104,7 @@ const deletePostById = async (id) => {
     try {
       await cloudinary.uploader.destroy(post.image.id);
     } catch (err) {
+      console.log(`Failed to delete image for post: ${id}. Error:`, err);
       const error = new Error("Failed to delete post image");
       error.code = "IMAGE_DELETE_FAILED";
       throw error;

@@ -12,7 +12,7 @@
       <i class="fa-solid fa-clock" style="color: #515151;"></i>
       <span class="created-date"><%= datePosted %></span>
     </p>
-    <% if (imageURL !== undefined && imageURL !== "") { %>
+    <% if (imageURL) { %>
       <div class="post-image">
         <img src="<%= imageURL %>" alt="post image">
       </div>

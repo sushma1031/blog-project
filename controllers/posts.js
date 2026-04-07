@@ -1,5 +1,6 @@
 const postService = require("../services/posts.js");
 const date = require("../utils/date.js");
+const config = require("../config.js");
 
 const renderHome = (req, res) => {
   postService
@@ -8,7 +9,7 @@ const renderHome = (req, res) => {
       posts.forEach((post) => {
         post.relativeDate = date.calcDate(post.createdAt);
       });
-      res.render("home", { posts });
+      res.render("home", { posts, defaultImage: config.defaultPostImage.url });
     })
     .catch((err) => {
       console.error("Unexpected error while fetching posts", err);
@@ -75,8 +76,8 @@ const getPost = (req, res) => {
           content: post.content,
           username: post.creator?.username || "Anonymous",
           datePosted: date.getDate(post.createdAt),
-          imageURL: post.image.url,
-          imageSource: post.image.source,
+          imageURL: post.image?.url,
+          imageSource: post.image?.source,
         });
       } else {
         return res.status(404).render("errors/404", {
@@ -100,39 +101,29 @@ const renderCompose = (req, res) => {
   res.render("compose");
 };
 
-const createPost = (req, res) => {
-  if (!req.file || Object.keys(req.file).length === 0) {
-    return res.status(400).render("errors/400", {
-      statusCode: 400,
-      message: "No image uploaded.",
-    });
-  }
-  if (!req.body.title || req.body.title.trim().length === 0 || !req.body.content) {
-    return res.status(400).render("errors/400", {
-      statusCode: 400,
-      message: "Title and content cannot be empty.",
-    });
-  }
-
-  postService
-    .createPost({
+const createPost = async (req, res) => {
+  try {
+    await postService.createPost({
       title: req.body.title,
       content: req.body.content,
-      imageUrl: req.file.path,
-      imageId: req.file.filename,
-      imageSource: req.body.imageSource,
+      file: req.file && Object.keys(req.file).length > 0 ? req.file : null,
+      imageSource: req.body.imageSource ? req.body.imageSource : "",
       userId: req.session.userId,
-    })
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((err) => {
-      console.error("Unexpected error while storing post", err);
-      res.status(500).render("errors/500", {
-        statusCode: 500,
-        message: "An unexpected error occurred while creating post.",
-      });
     });
+    res.redirect("/");
+  } catch (err) {
+    if (err.code === "VALIDATION_ERROR") {
+      return res.status(400).render("errors/400", {
+        statusCode: 400,
+        message: err.message,
+      });
+    }
+    console.error("Unexpected error while storing post", err);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "An unexpected error occurred while creating post.",
+    });
+  }
 };
 
 const renderEdit = (req, res) => {
@@ -148,7 +139,7 @@ const renderEdit = (req, res) => {
           content: post.content,
           username: post.username,
           thumbnail: thumbnailUrl,
-          imageSource: post.image.source,
+          imageSource: post.image?.source || "",
         });
       } else {
         res.status(404).render("errors/404", {
