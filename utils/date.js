@@ -1,4 +1,5 @@
 exports.getDate = (date) => {
+  if (!(date instanceof Date) || isNaN(date)) return "";
   let options = {
     year: "numeric",
     month: "short",
@@ -6,10 +7,10 @@ exports.getDate = (date) => {
   };
 
   return date.toLocaleDateString("en-US", options);
-}
+};
 
 exports.calcDate = function (postedDate) {
-  const today = new Date()
+  const today = new Date();
   const diff = Math.floor(today.getTime() - postedDate.getTime());
   const day = 1000 * 60 * 60 * 24;
 
@@ -19,14 +20,14 @@ exports.calcDate = function (postedDate) {
 
   if (years > 0) {
     if (years == 1) return "1 year";
-    return years + " years"
+    return years + " years";
   }
   if (months > 5) {
-    return months + " months"
+    return months + " months";
   }
   let options = {
     month: "short",
     day: "numeric",
   };
   return postedDate.toLocaleDateString("en-US", options);
-}
+};

@@ -15,8 +15,10 @@ const envSchema = z.object({
   CLOUDINARY_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
-  RENDER_API_KEY:z.string(),
+  RENDER_API_KEY: z.string(),
   ADMIN_EMAIL: z.string(),
+  NODE_ENV: z.enum(["development", "production"]).default("development"),
+  DEFAULT_POST_IMAGE_URL: z.string(),
 });
 
 const parsed = envSchema.safeParse(envVars);
@@ -29,9 +31,13 @@ if (!parsed.success) {
 const config = {
   mongoURI: encodeURI(parsed.data.MONGO_URI),
   port: parsed.data.PORT,
+  env: parsed.data.NODE_ENV,
 
   sessionSecret: parsed.data.SESSION_SECRET,
   adminEmail: parsed.data.ADMIN_EMAIL,
+  defaultPostImage: {
+    url: parsed.data.DEFAULT_POST_IMAGE_URL,
+  },
 
   cloudinary: {
     name: parsed.data.CLOUDINARY_NAME,
@@ -40,6 +46,10 @@ const config = {
   },
   render: {
     apiKey: parsed.data.RENDER_API_KEY,
+  },
+  scripts: {
+    fontAwesome: envVars.FONTAWESOME_KIT,
+    tinyMCE: envVars.TINYMCE_API_KEY,
   },
 };
 

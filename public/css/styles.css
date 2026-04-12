@@ -18,6 +18,46 @@ button.navbar-toggler:focus {
     box-shadow: none;
 }
 
+.search-bar {
+    position: relative;
+    width: 24rem;
+    max-width: 100%;
+    margin-left: auto !important;
+}
+
+.search-input {
+    width: 100%;
+    height: 36px;
+    padding-left: 12px;
+    padding-right: 40px;
+    background-color: transparent;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #46a597;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0;
+}
+
+.search-btn:hover {
+    color: #333;
+}
+
 .title {
     text-align: center;
     padding: 2rem 0;
@@ -55,24 +95,20 @@ hr {
     border-radius: 0;
     margin-bottom: 0.75rem;
     font-size: 12px;
-    letter-spacing: 5px;
 }
 
 .nav-link {
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     text-transform: uppercase;
 }
 
-.dropdown-item {
-    letter-spacing: 0px;
-}
-
 p.navbar-brand {
+    letter-spacing: 5px;
     margin: 0;
 }
 
 .navbar-nav li a:hover {
-    color: #55cbba !important;
+    color: #44b3a3 !important;
 }
 
 .btn-primary {
@@ -111,11 +147,13 @@ p.navbar-brand {
     background-color: #f1f1f1;
     overflow: hidden;
     text-align: center;
+    position: relative;
 }
 
 .featured-image img {
     height: inherit;
-    transform: scale(1);
+    width: 100%;
+    object-fit: cover;
     opacity: 1;
     transition-property: transform, opacity;
     transition-duration: 200ms;
@@ -194,6 +232,12 @@ p.navbar-brand {
     overflow: hidden;
 }
 
+.search-meta {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
 .opacity-60 {
     opacity: 0.6;
 }
@@ -224,6 +268,11 @@ p.navbar-brand {
 }
 
 @media (max-width: 1028px) {
+    .search-bar {
+        margin-left: 0;
+        width: auto;
+    }
+
     .featured-image {
         width: 100%;
         height: auto;
