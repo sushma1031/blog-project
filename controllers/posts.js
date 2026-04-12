@@ -12,7 +12,7 @@ const renderHome = (req, res) => {
       res.render("home", { posts, defaultImage: config.defaultPostImage.url });
     })
     .catch((err) => {
-      console.error("Unexpected error while fetching posts", err);
+      console.error("Posts fetch: Unexpected error: ", err);
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "Failed to fetch posts.",
@@ -40,7 +40,7 @@ const searchPosts = (req, res) => {
       res.render("search", { posts, query });
     })
     .catch((err) => {
-      console.error("Unexpected error while fetching posts", err);
+      console.error("Posts fetch: Unexpected error: ", err);
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "Failed to fetch posts.",
@@ -58,7 +58,7 @@ const getAllPosts = (req, res) => {
       res.render("posts", { posts });
     })
     .catch((err) => {
-      console.error("Unexpected error while fetching posts", err);
+      console.error("Posts fetch: Unexpected error: ", err);
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "Failed to fetch posts.",
@@ -89,7 +89,7 @@ const getPost = (req, res) => {
       }
     })
     .catch((error) => {
-      console.error("Unexpected error while fetching post", error);
+      console.error(`Post fetch ${req.params.postID}: Unexpected error: `, error);
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "An unexpected error occurred.",
@@ -118,7 +118,7 @@ const createPost = async (req, res) => {
         message: err.message,
       });
     }
-    console.error("Unexpected error while storing post", err);
+    console.error("Post create: Unexpected error: ", err);
     res.status(500).render("errors/500", {
       statusCode: 500,
       message: "An unexpected error occurred while creating post.",
@@ -151,7 +151,7 @@ const renderEdit = (req, res) => {
       }
     })
     .catch((error) => {
-      console.error(`Unexpected error while fetching post for edit: ${req.params.postID}`, error);
+      console.error(`Post edit ${req.params.postID}: Unexpected error fetching: `, error);
       res.status(500).render("errors/500", {
         statusCode: 500,
         message: "An unexpected error occurred.",
@@ -168,14 +168,7 @@ const updatePost = async (req, res) => {
     );
     res.redirect(`/posts/${req.params.postID}`);
   } catch (error) {
-    if (error.code === "IMAGE_DELETE_FAILED") {
-      console.error(`Failed to delete previous image for post: ${req.params.postID}`, error);
-      return res.status(500).render("errors/500", {
-        statusCode: 500,
-        message: "Failed to replace post image. Please try again later.",
-      });
-    }
-    console.error(`Unexpected error while updating post: ${req.params.postID}`, error);
+    console.error(`Post edit ${req.params.postID}: Unexpected error saving: `, error);
     res.status(500).render("errors/500", {
       statusCode: 500,
       message: "An unexpected error occurred while saving changes.",
@@ -187,7 +180,7 @@ const deletePost = async (req, res) => {
   try {
     const post = await postService.deletePostById(req.params.postID);
     if (!post) {
-      console.warn(`Post deletion error: No post found for: ${req.params.postID}`);
+      console.warn(`Post delete ${req.params.postID}: Not found.`);
       return res.status(404).render("errors/404", {
         statusCode: 404,
         message: "No post found with the given ID.",
@@ -195,21 +188,14 @@ const deletePost = async (req, res) => {
     }
     res.redirect("/posts");
   } catch (error) {
-    if (error.code === "IMAGE_DELETE_FAILED") {
-      console.error(`Post deletion error: Failed to delete image for post: ${req.params.postID}`, error);
-      return res.status(500).render("errors/500", {
-        statusCode: 500,
-        message: "Failed to delete post image.",
-      });
-    }
     if (error.code === "DB_DELETE_FAILED") {
-      console.error(`Post deletion error: Failed to delete post from DB: ${req.params.postID}`, error);
       return res.status(500).render("errors/500", {
         statusCode: 500,
-        message: "Failed to delete post due to a server error.",
+        message: "Failed to delete post. Please try again later.",
       });
     }
-    console.error(`Unexpected error while deleting post: ${req.params.postID}`, error);
+
+    console.error(`Post delete ${req.params.postID}: Unexpected error: `, error);
     res.status(500).render("errors/500", {
       statusCode: 500,
       message: "An unexpected error occurred while deleting the post.",

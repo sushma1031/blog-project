@@ -83,9 +83,7 @@ const updatePost = async (id, fields, newFile) => {
       try {
         await cloudinary.uploader.destroy(modifiedPost.image.id);
       } catch (error) {
-        const err = new Error("Failed to delete previous image");
-        err.code = "IMAGE_DELETE_FAILED";
-        throw err;
+        console.error(`Post edit ${id}: Failed to delete previous image: `, error);
       }
     }
     modifiedPost.image.url = newFile.path;
@@ -104,17 +102,15 @@ const deletePostById = async (id) => {
     try {
       await cloudinary.uploader.destroy(post.image.id);
     } catch (err) {
-      console.log(`Failed to delete image for post: ${id}. Error:`, err);
-      const error = new Error("Failed to delete post image");
-      error.code = "IMAGE_DELETE_FAILED";
-      throw error;
+      console.error(`Post delete ${id}: Failed to delete image:`, err);
     }
   }
 
   try {
     await post.deleteOne();
   } catch (err) {
-    const error = new Error("Failed to delete post from DB");
+    console.error(`Post delete ${id}: Failed to delete post from DB:`, err);
+    const error = new Error();
     error.code = "DB_DELETE_FAILED";
     throw error;
   }
