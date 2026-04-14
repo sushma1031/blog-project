@@ -26,18 +26,26 @@
       <div class="invalid-feedback" id="invalidFb"></div>
     </div>
 
-      <div class="row mb-3">
-        <div class="col">
-          <label for="image" class="form-label">Choose an image</label>
-          <input class="form-control" type="file" name="image" id="image">
-        </div>
-        <div class="col">
-          <label for="imageSource" class="form-label">Source</label>
-          <input type="text" class="form-control" name="imageSource" id="imageSource" placeholder="Eg: <a href=link> Artist </a> on <a href=link> Website </a>">
-        </div>
+    <div class="row mb-3">
+      <div class="col">
+        <label for="image" class="form-label">Choose an image</label>
+        <input class="form-control" type="file" name="image" id="image">
       </div>
+      <div class="col">
+        <label for="imageSource" class="form-label">Source</label>
+        <input type="text" class="form-control" name="imageSource" id="imageSource" placeholder="Eg: <a href=link> Artist </a> on <a href=link> Website </a>">
+      </div>
+    </div>
 
-    <button class="btn btn-secondary" type="submit">Publish</button>
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary">Publish</button>
+      <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="visually-hidden">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><button class="dropdown-item" type="submit" formaction="/posts/drafts">Save as Draft</button></li>
+      </ul>
+    </div>
   </form>
   <script src="/scripts/composeValidation.js" type="module"></script>
 

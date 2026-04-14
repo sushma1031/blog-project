@@ -2,6 +2,10 @@ const postService = require("../services/posts.js");
 const date = require("../utils/date.js");
 const config = require("../config.js");
 
+function getPostBasePath(status) {
+  return status === postService.PostStatus.DRAFT ? "/posts/drafts" : "/posts";
+}
+
 const renderHome = (req, res) => {
   postService
     .getRecentPosts()
@@ -48,14 +52,14 @@ const searchPosts = (req, res) => {
     });
 };
 
-const getAllPosts = (req, res) => {
+const renderAllPosts = (req, res) => {
   postService
     .getAllPosts()
     .then((posts) => {
       posts.forEach((post) => {
         post.dateString = date.getDate(post.createdAt);
       });
-      res.render("posts", { posts });
+      res.render("posts", { posts, title: "All Posts", viewBasePath: "/posts" });
     })
     .catch((err) => {
       console.error("Posts fetch: Unexpected error: ", err);
@@ -66,12 +70,14 @@ const getAllPosts = (req, res) => {
     });
 };
 
-const getPost = (req, res) => {
+const renderPost = (req, res) => {
   postService
     .getPostById(req.params.postID)
     .then((post) => {
       if (post) {
         return res.render("post", {
+          status: postService.PostStatus.PUBLISHED,
+          id: post._id,
           title: post.title,
           content: post.content,
           username: post.creator?.username || "Anonymous",
@@ -103,14 +109,14 @@ const renderCompose = (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    await postService.createPost({
+    const post = await postService.createPost({
       title: req.body.title,
       content: req.body.content,
       file: req.file && Object.keys(req.file).length > 0 ? req.file : null,
       imageSource: req.body.imageSource ? req.body.imageSource : "",
       userId: req.session.userId,
     });
-    res.redirect("/");
+    res.redirect(`/posts/${post._id}`);
   } catch (err) {
     if (err.code === "VALIDATION_ERROR") {
       return res.status(400).render("errors/400", {
@@ -135,11 +141,13 @@ const renderEdit = (req, res) => {
         let thumbnailUrl = "";
         if (post.image?.url) thumbnailUrl = post.image.url.replace(regex, `$1c_thumb,w_200,g_face/$2`);
         res.render("edit", {
+          status: post.status,
           title: post.title,
           content: post.content,
           username: post.username,
           thumbnail: thumbnailUrl,
           imageSource: post.image?.source || "",
+          id: post._id,
         });
       } else {
         res.status(404).render("errors/404", {
@@ -161,12 +169,13 @@ const renderEdit = (req, res) => {
 
 const updatePost = async (req, res) => {
   try {
-    await postService.updatePost(
+    const updatedPost = await postService.updatePost(
       req.params.postID,
       req.body,
       req.file && Object.keys(req.file).length > 0 ? req.file : null,
     );
-    res.redirect(`/posts/${req.params.postID}`);
+
+    res.redirect(`${getPostBasePath(updatedPost.status)}/${req.params.postID}`);
   } catch (error) {
     console.error(`Post edit ${req.params.postID}: Unexpected error saving: `, error);
     res.status(500).render("errors/500", {
@@ -186,7 +195,7 @@ const deletePost = async (req, res) => {
         message: "No post found with the given ID.",
       });
     }
-    res.redirect("/posts");
+    res.redirect(getPostBasePath(post.status));
   } catch (error) {
     if (error.code === "DB_DELETE_FAILED") {
       return res.status(500).render("errors/500", {
@@ -203,14 +212,105 @@ const deletePost = async (req, res) => {
   }
 };
 
+const getAllDrafts = async (req, res) => {
+  try {
+    const drafts = await postService.getAllDrafts();
+    drafts.forEach((draft) => {
+      draft.dateString = date.getDate(draft.createdAt);
+    });
+    res.render("posts", { posts: drafts, title: "Drafts", viewBasePath: "/posts/drafts" });
+  } catch (error) {
+    console.error("Drafts fetch: Unexpected error: ", error);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "Failed to fetch drafts.",
+    });
+  }
+};
+
+const createDraft = async (req, res) => {
+  try {
+    const draft = await postService.createDraft({
+      title: req.body.title,
+      content: req.body.content,
+      file: req.file && Object.keys(req.file).length > 0 ? req.file : null,
+      imageSource: req.body.imageSource ? req.body.imageSource : "",
+      userId: req.session.userId,
+    });
+    res.redirect(`/posts/${draft._id}/edit`);
+  } catch (err) {
+    if (err.code === "VALIDATION_ERROR") {
+      return res.status(400).render("errors/400", {
+        statusCode: 400,
+        message: err.message,
+      });
+    }
+    console.error("Draft create: Unexpected error: ", err);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "An unexpected error occurred while creating draft.",
+    });
+  }
+};
+
+const renderDraft = async (req, res) => {
+  try {
+    const post = await postService.getDraftById(req.params.postID);
+
+    if (!post) {
+      return res.status(404).render("errors/404", {
+        title: "Not Found",
+        message: "We couldn't find the post you're looking for.",
+        redirect: "/posts/drafts",
+        redirectText: "All Drafts",
+      });
+    }
+
+    return res.render("post", {
+      status: postService.PostStatus.DRAFT,
+      id: post._id,
+      title: post.title,
+      content: post.content,
+      username: post.creator?.username || "Anonymous",
+      datePosted: date.getDate(post.createdAt),
+      imageURL: post.image?.url,
+      imageSource: post.image?.source,
+    });
+  } catch (error) {
+    console.error(`Draft fetch ${req.params.postID}: Unexpected error: `, error);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "An unexpected error occurred.",
+    });
+  }
+};
+
+const publishDraft = async (req, res) => {
+  try {
+    await postService.publishDraft(req.params.postID);
+
+    res.redirect(`/posts/${req.params.postID}`);
+  } catch (error) {
+    console.error(`Draft publish ${req.params.postID}: Unexpected error: `, error);
+    res.status(500).render("errors/500", {
+      statusCode: 500,
+      message: "An unexpected error occurred.",
+    });
+  }
+};
+
 module.exports = {
   renderHome,
   searchPosts,
-  getAllPosts,
-  getPost,
+  renderAllPosts,
+  renderPost,
   renderCompose,
   createPost,
   renderEdit,
   updatePost,
   deletePost,
+  getAllDrafts,
+  createDraft,
+  renderDraft,
+  publishDraft,
 };

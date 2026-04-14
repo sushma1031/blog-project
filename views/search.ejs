@@ -15,7 +15,10 @@
 
           <% if(auth) { %>
             <div class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <button 
+                class="dropdown-toggle btn btn-link text-body text-decoration-none p-0 my-0" 
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              </button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/posts/<%=post._id%>" class="link">View</a></li>
                 <li><a class="dropdown-item" href="/posts/<%=post._id%>/edit" class="link">Edit</a></li>
