@@ -9,7 +9,8 @@ router.get("/search", postsController.searchPosts);
 router.get("/posts", postsController.getAllPosts);
 
 router.get("/compose", authenticate, postsController.renderCompose);
-router.post("/compose", authenticate, upload.single("image"), postsController.createPost);
+router.post("/posts", authenticate, upload.single("image"), postsController.createPost);
+
 
 router.get("/posts/:postID", postsController.getPost);
 router.get("/posts/:postID/edit", authenticate, postsController.renderEdit);
