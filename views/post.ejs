@@ -1,9 +1,16 @@
 <%- include("partials/header"); -%>
 
+  <% if (status === "draft") { %>
+    <div class="d-flex flex-wrap align-items-center gap-2 mt-4 px-5-percent">
+      <a class="btn btn-primary btn-sm" href="/posts/<%= id %>/edit">Edit</a>
+      <a class="btn btn-outline-secondary btn-sm" href="/posts/<%= id %>/publish">Publish</a>
+    </div>
+  <% } %>
+
   <h1 class="title">
     <%= title %>
   </h1>
-  <div class="post-body">
+  <div class="px-5-percent">
     <p class="post-content pb-3 opacity-60">
       <i class="fa-solid fa-user" style="color: #515151"></i>
       <span class="username">

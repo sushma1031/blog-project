@@ -1,7 +1,9 @@
 import isContentEmpty from "./contentValidation.js";
+
 const editForm = document.querySelector(".edit-form");
 const imageInput = document.querySelector(".edit-form #image");
 const imageSrc = document.querySelector(".edit-form #imageSource");
+
 let prevSrc = imageSrc.value;
 
 editForm.addEventListener(
@@ -16,7 +18,7 @@ editForm.addEventListener(
     }
     editForm.classList.add("was-validated");
   },
-  false
+  false,
 );
 
 imageInput.addEventListener("change", (event) => {
@@ -30,5 +32,6 @@ imageInput.addEventListener("change", (event) => {
     thumbnail.src = e.target.result;
   };
   reader.readAsDataURL(imgFile);
-});
 
+  thumbnail.classList.remove("d-none");
+});

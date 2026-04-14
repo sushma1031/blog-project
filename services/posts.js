@@ -2,24 +2,29 @@ const Post = require("../database/models/Post.js");
 const { ObjectId } = require("mongoose").Types;
 const sanitizeHtml = require("sanitize-html");
 const cloudinary = require("cloudinary").v2;
-const config = require("../config.js");
+const config = require("../config.js"); // TODO: remove!
+
+const PostStatus = Object.freeze({
+  DRAFT: "draft",
+  PUBLISHED: "published",
+});
 
 const getRecentPosts = (count = 3) => {
-  return Post.find({}).sort({ createdAt: -1 }).limit(count);
+  return Post.find({ status: PostStatus.PUBLISHED }).sort({ postedAt: -1 }).limit(count);
 };
 
 const getAllPosts = () => {
-  return Post.find({}, { creator: 0 }).sort({ createdAt: -1 });
+  return Post.find({ status: PostStatus.PUBLISHED }, { creator: 0 }).sort({ postedAt: -1 });
 };
 
 const searchPosts = (query) => {
   const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const filter = { title: new RegExp(escapedQuery, "i") };
+  const filter = { title: new RegExp(escapedQuery, "i"), status: PostStatus.PUBLISHED };
   return Post.find(filter, { title: 1 });
 };
 
 const getPostById = (id) => {
-  return Post.findOne({ _id: id }).populate("creator", "username");
+  return Post.findOne({ _id: id, status: PostStatus.PUBLISHED }).populate("creator", "username");
 };
 
 const getPostForEdit = (id) => {
@@ -59,6 +64,8 @@ const createPost = ({ title, content, file, imageSource, userId }) => {
     content: sanitizedContent,
     creator: new ObjectId(userId),
     image: imageData,
+    status: PostStatus.PUBLISHED,
+    postedAt: new Date(),
   });
 };
 
@@ -118,7 +125,57 @@ const deletePostById = async (id) => {
   return post;
 };
 
+const getAllDrafts = () => {
+  return Post.find({ status: PostStatus.DRAFT }).populate("creator", "username").sort({ createdAt: -1 });
+};
+
+const createDraft = ({ title, content, file, imageSource, userId }) => {
+  if (!title || title.trim().length === 0 || !content) {
+    const err = new Error("Title or content cannot be empty.");
+    err.code = "VALIDATION_ERROR";
+    throw err;
+  }
+
+  let imageData = undefined;
+
+  if (file != null) {
+    if (!imageSource || imageSource.trim().length === 0) {
+      const err = new Error("Provide the source/credit for the uploaded image.");
+      err.code = "VALIDATION_ERROR";
+      throw err;
+    }
+
+    imageData = {
+      url: file.path,
+      id: file.filename,
+      source: sanitizeHtml(imageSource, {
+        allowedTags: ["a"],
+        allowedAttributes: { a: ["href"] },
+      }),
+    };
+  }
+
+  const sanitizedContent = sanitizeHtml(content);
+
+  return Post.create({
+    title: title.trim(),
+    content: sanitizedContent,
+    creator: new ObjectId(userId),
+    image: imageData,
+    status: PostStatus.DRAFT,
+  });
+};
+
+const getDraftById = (id) => {
+  return Post.findOne({ _id: id, status: PostStatus.DRAFT }).populate("creator", "username");
+};
+
+const publishDraft = (id) => {
+  return Post.updateOne({ _id: id }, { $set: { status: PostStatus.PUBLISHED, postedAt: new Date() } });
+};
+
 module.exports = {
+  PostStatus,
   getRecentPosts,
   getAllPosts,
   searchPosts,
@@ -127,4 +184,8 @@ module.exports = {
   createPost,
   updatePost,
   deletePostById,
+  getAllDrafts,
+  createDraft,
+  getDraftById,
+  publishDraft,
 };
