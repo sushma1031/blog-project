@@ -19,7 +19,7 @@ const closeDBConn = async () => {
     console.log("MongoDB connection closed.");
     process.exit(0);
   } catch (err) {
-    console.error("Error closing Mongo connection:", err);
+    console.error("Error closing Mongo connection: ", err);
     process.exit(1);
   }
 };

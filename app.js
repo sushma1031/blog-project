@@ -3,6 +3,7 @@ const express = require("express");
 const { connectDB, closeDBConn } = require("./database/db.js");
 const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
+const routes = require("./routes/index.js");
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(require("./routes/index.js"));
+app.use(routes);
 
 app.use((req, res) => {
   res.status(404).render("errors/404", { title: "Page Not Found" });
@@ -51,10 +52,10 @@ const shutdown = async () => {
   if (isShuttingDown) return;
   isShuttingDown = true;
 
-  console.log("\nReceived kill signal, shutting down gracefully");
+  console.log("\nReceived kill signal, shutting down gracefully.");
 
   server.close(async () => {
-    console.log("Closing remaining connections");
+    console.log("Closing remaining connections.");
     closeDBConn();
   });
   server.closeAllConnections();
