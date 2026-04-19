@@ -1,4 +1,5 @@
 # Blog Website
+
 A full-stack blog web application built using the following:
 
 - Front-end: EJS with Bootstrap
@@ -8,13 +9,13 @@ A full-stack blog web application built using the following:
 - Cloud host: Render
 
 ## Snapshots
-![screenshot of the home page](public/github-images/image.png)
-![screenshot of the login page](public/github-images/image2.png)
-![screenshot of a blog post](public/github-images/image3.png)
+
+![screenshot of the home page](assets/images/image.png)
+![screenshot of the login page](assets/images/image2.png)
+![screenshot of a blog post](assets/images/image3.png)
 
 ## Run Locally
+
 1. Clone the repository and install dependencies: `npm install`
 1. Start the server: `npm run start`
 1. Navigate to `localhost:3000` in your browser
-
-
