@@ -6,7 +6,7 @@ const upload = require("../middleware/cloudinary-upload.js");
 
 router.get("/", postsController.renderHome);
 router.get("/search", postsController.searchPosts);
-router.get("/posts", postsController.renderAllPosts);
+router.get("/posts", postsController.getAllPosts);
 
 router.get("/compose", authenticate, postsController.renderCompose);
 

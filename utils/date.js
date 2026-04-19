@@ -1,33 +1,29 @@
 exports.getDate = (date) => {
   if (!(date instanceof Date) || isNaN(date)) return "";
-  let options = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
 
-  return date.toLocaleDateString("en-US", options);
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 };
 
-exports.calcDate = function (postedDate) {
+exports.calcRelativeDate = function (inputDate) {
   const today = new Date();
-  const diff = Math.floor(today.getTime() - postedDate.getTime());
-  const day = 1000 * 60 * 60 * 24;
+  const date = new Date(inputDate);
 
-  const days = Math.floor(diff / day);
-  const months = Math.floor(days / 31);
-  const years = Math.floor(months / 12);
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
 
-  if (years > 0) {
-    if (years == 1) return "1 year";
-    return years + " years";
+  const diff = today - date;
+
+  if (diff === 0) return "Today";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days < 30) {
+    return days == 1 ? "1 day ago" : `${days} days ago`;
   }
-  if (months > 5) {
-    return months + " months";
+
+  const months = Math.floor(days / 30);
+  if (months < 6) {
+    return months == 1 ? "1 month ago" : `${months} months ago`;
   }
-  let options = {
-    month: "short",
-    day: "numeric",
-  };
-  return postedDate.toLocaleDateString("en-US", options);
+
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };

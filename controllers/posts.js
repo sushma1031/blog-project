@@ -11,7 +11,7 @@ const renderHome = (req, res) => {
     .getRecentPosts()
     .then((posts) => {
       posts.forEach((post) => {
-        post.relativeDate = date.calcDate(post.createdAt);
+        post.relativeDate = date.calcRelativeDate(post.postedAt);
       });
       res.render("home", { posts, defaultImage: config.defaultPostImage.url });
     })
@@ -39,7 +39,7 @@ const searchPosts = (req, res) => {
     .searchPosts(query)
     .then((posts) => {
       posts.forEach((post) => {
-        post.dateString = date.getDate(post.createdAt);
+        post.dateString = date.getDate(post.postedAt);
       });
       res.render("search", { posts, query });
     })
@@ -52,12 +52,12 @@ const searchPosts = (req, res) => {
     });
 };
 
-const renderAllPosts = (req, res) => {
+const getAllPosts = (req, res) => {
   postService
     .getAllPosts()
     .then((posts) => {
       posts.forEach((post) => {
-        post.dateString = date.getDate(post.createdAt);
+        post.dateString = date.getDate(post.postedAt);
       });
       res.render("posts", { posts, title: "All Posts", viewBasePath: "/posts" });
     })
@@ -81,7 +81,7 @@ const renderPost = (req, res) => {
           title: post.title,
           content: post.content,
           username: post.creator?.username || "Anonymous",
-          datePosted: date.getDate(post.createdAt),
+          datePosted: date.getDate(post.postedAt),
           imageURL: post.image?.url,
           imageSource: post.image?.source,
         });
@@ -216,7 +216,7 @@ const getAllDrafts = async (req, res) => {
   try {
     const drafts = await postService.getAllDrafts();
     drafts.forEach((draft) => {
-      draft.dateString = date.getDate(draft.createdAt);
+      draft.dateString = `Last updated: ${date.calcRelativeDate(draft.updatedAt)}`;
     });
     res.render("posts", { posts: drafts, title: "Drafts", viewBasePath: "/posts/drafts" });
   } catch (error) {
@@ -272,7 +272,6 @@ const renderDraft = async (req, res) => {
       title: post.title,
       content: post.content,
       username: post.creator?.username || "Anonymous",
-      datePosted: date.getDate(post.createdAt),
       imageURL: post.image?.url,
       imageSource: post.image?.source,
     });
@@ -302,7 +301,7 @@ const publishDraft = async (req, res) => {
 module.exports = {
   renderHome,
   searchPosts,
-  renderAllPosts,
+  getAllPosts,
   renderPost,
   renderCompose,
   createPost,

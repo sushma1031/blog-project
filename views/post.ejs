@@ -18,8 +18,10 @@
       <span class="username">
         <%= username %>
       </span>
-      <i class="fa-solid fa-clock" style="color: #515151;"></i>
-      <span class="created-date"><%= datePosted %></span>
+      <% if (status === "published") { %>
+        <i class="fa-solid fa-clock" style="color: #515151;"></i>
+        <span class="created-date"><%= datePosted %></span>
+      <% } %>
     </p>
     <% if (imageURL) { %>
       <div class="post-image">
